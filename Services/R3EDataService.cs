@@ -1,11 +1,13 @@
 ﻿using ElectronNET.API;
 using ElectronNET.API.Entities;
 using log4net;
+using Microsoft.AspNetCore.SignalR;
 using R3E.Data;
 using ReHUD.Extensions;
 using ReHUD.Interfaces;
 using ReHUD.Models;
 using ReHUD.Utils;
+using SignalRChat.Hubs;
 
 namespace ReHUD.Services
 {
@@ -20,6 +22,7 @@ namespace ReHUD.Services
 
         private readonly IRaceRoomObserver raceRoomObserver;
         private readonly ISharedMemoryService sharedMemoryService;
+        private readonly IHubContext<ReHUDHub> hubContext;
 
         private readonly AutoResetEvent resetEvent;
         private CancellationTokenSource cancellationTokenSource = new();
@@ -43,9 +46,10 @@ namespace ReHUD.Services
         private double lastFuel = -1;
         private volatile int lastLap = -1;
 
-        public R3EDataService(IRaceRoomObserver raceRoomObserver, ISharedMemoryService sharedMemoryService) {
+        public R3EDataService(IRaceRoomObserver raceRoomObserver, ISharedMemoryService sharedMemoryService, IHubContext<ReHUDHub> hubContext) {
             this.raceRoomObserver = raceRoomObserver;
             this.sharedMemoryService = sharedMemoryService;
+            this.hubContext = hubContext;
 
             extraData = new() {
                 forceUpdateAll = false
@@ -154,11 +158,15 @@ namespace ReHUD.Services
                     if (enteredEditMode) {
                         extraData.forceUpdateAll = true;
                         await IpcCommunication.Invoke(window, "r3eData", extraData.Serialize(usedKeys));
+                        await hubContext.Clients.All.SendAsync("r3eData", extraData.Serialize(usedKeys),
+                            cancellationToken);
                         extraData.forceUpdateAll = false;
                         enteredEditMode = false;
                     }
-                    else {
+                    else { 
                         await IpcCommunication.Invoke(window, "r3eData", extraData.Serialize(usedKeys));
+                        await hubContext.Clients.All.SendAsync("r3eData", extraData.Serialize(usedKeys),
+                            cancellationToken);
                     }
                 };
 
@@ -166,7 +174,10 @@ namespace ReHUD.Services
                     bool notDriving = data.IsNotDriving();
                     if (notDriving) {
                         if (window != null && (hudShown ?? true)) {
-                            Electron.IpcMain.Send(window, "hide");
+                            if (HybridSupport.IsElectronActive)
+                            {
+                                Electron.IpcMain.Send(window, "hide");
+                            }
                             hudShown = false;
                         }
 
@@ -178,13 +189,22 @@ namespace ReHUD.Services
                         }
                     }
                     else if (window != null && !(hudShown ?? false)) {
-                        Electron.IpcMain.Send(window, "show");
+                        if (HybridSupport.IsElectronActive)
+                        {
+                            Electron.IpcMain.Send(window, "show");
+                        }
                         window.SetAlwaysOnTop(!Startup.IsInVrMode, OnTopLevel.screenSaver);
                         hudShown = true;
                     }
                 };
-
-                await Task.WhenAll(saveDataTask(), updateHUDTask(), updateHUDStateTask());
+                //var sdTask = saveDataTask();
+                var uhTask = updateHUDTask();
+                //var uhsTask = updateHUDStateTask();
+                await Task.WhenAll(
+                    //sdTask, 
+                    //uhsTask, 
+                    uhTask
+                    );
 
                 lastLap = data.completedLaps;
             }

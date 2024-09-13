@@ -61,14 +61,20 @@ public class Startup
             endpoints.MapHub<ReHUDHub>("/ReHUDHub");
             endpoints.MapRazorPages();
         });
-
-        Electron.App.CommandLine.AppendSwitch("enable-transparent-visuals");
+        if (HybridSupport.IsElectronActive)
+        {
+            Electron.App.CommandLine.AppendSwitch("enable-transparent-visuals");
+        }
 
 
         version.Load();
         _ = updateService.GetAppVersion().ContinueWith(async (t) => {
             try {
-                await version.Update(t.Result);
+                if (HybridSupport.IsElectronActive)
+                {
+                    await version.Update(t.Result);
+                }
+
                 settings.Load();
                 await LoadSettings();
             } catch (Exception e) {
@@ -82,43 +88,61 @@ public class Startup
                 logger.Error("Error loading HUD layouts", e);
             }
 
-            try {
-                string preset = await Electron.App.CommandLine.GetSwitchValueAsync("preset");
-                if (preset != null && preset.Length > 0) {
-                    HudLayout? layout = HudLayout.GetHudLayout(preset);
-                    if (layout != null) {
-                        HudLayout.SetActiveLayout(layout);
-                    }
-                    else {
-                        logger.WarnFormat("Could not find preset: {0}", preset);
+            if (HybridSupport.IsElectronActive)
+            {
+                try
+                {
+                    string preset = await Electron.App.CommandLine.GetSwitchValueAsync("preset");
+                    if (preset != null && preset.Length > 0)
+                    {
+                        HudLayout? layout = HudLayout.GetHudLayout(preset);
+                        if (layout != null)
+                        {
+                            HudLayout.SetActiveLayout(layout);
+                        }
+                        else
+                        {
+                            logger.WarnFormat("Could not find preset: {0}", preset);
+                        }
                     }
                 }
+                catch (Exception e)
+                {
+                    logger.Error("Error loading preset", e);
+                }
+
+                if (HybridSupport.IsElectronActive)
+                {
+                    Electron.App.Ready += async () =>
+                    {
+                        try
+                        {
+                            r3eDataService.Load();
+
+                            await Electron.IpcMain.On("get-port", (args) =>
+                            {
+                                var windows = new[] { MainWindow, SettingsWindow }.Where(x => x != null);
+
+                                foreach (var window in windows)
+                                {
+                                    Electron.IpcMain.Send(window, "port", BridgeSettings.WebPort);
+                                }
+                            });
+                            await CreateMainWindow();
+                            await CreateSettingsWindow(env);
+
+                            this.raceroomObserver.Start();
+                        }
+                        catch (Exception e)
+                        {
+                            logger.Error("Error creating windows", e);
+                        }
+                    };
+                }
             }
-            catch (Exception e) {
-                logger.Error("Error loading preset", e);
-            }
-
-            if (HybridSupport.IsElectronActive) {
-                Electron.App.Ready += async () => {
-                    try {
-                        r3eDataService.Load();
-
-                        await Electron.IpcMain.On("get-port", (args) => {
-                            var windows = new[] { MainWindow, SettingsWindow }.Where(x => x != null);
-
-                            foreach (var window in windows) {
-                                Electron.IpcMain.Send(window, "port", BridgeSettings.WebPort);
-                            }
-                        });
-                        await CreateMainWindow();
-                        await CreateSettingsWindow(env);
-
-                        this.raceroomObserver.Start();
-                    }
-                    catch (Exception e) {
-                        logger.Error("Error creating windows", e);
-                    }
-                };
+            else
+            {
+                this.raceroomObserver.Start();
             }
         });
     }

@@ -26,7 +26,10 @@ public static class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder => {
                 Console.WriteLine("Configuring Web Host Defaults");
-                webBuilder.UseElectron(args);
+                if (HybridSupport.IsElectronActive)
+                {
+                    webBuilder.UseElectron(args);                    
+                }
 #if DEBUG
                 webBuilder.UseEnvironment(Environments.Development);
 #endif

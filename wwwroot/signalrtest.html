@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+<head>
+    <title>SignalR Chat</title>
+</head>
+<body>
+    <h1>SignalR Chat</h1>
+    <input type="text" id="userInput" placeholder="Enter your name" />
+    <input type="text" id="messageInput" placeholder="Enter your message" />
+    <button id="sendButton">Send</button>
+
+    <ul id="messagesList"></ul>
+
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://localhost:5093/ReHudHub")
+            .build();
+
+        connection.on("r3eData", (user, message) => {
+            const msg = `${user}: ${message}`;
+            const li = document.createElement("li");
+            li.textContent = msg;
+            document.getElementById("messagesList").appendChild(li);
+        });
+
+        document.getElementById("sendButton").addEventListener("click", () => {
+            const user = document.getElementById("userInput").value;
+            const message = document.getElementById("messageInput").value;
+            connection.invoke("SendMessage", user, message)
+                .catch(err => console.error(err.toString()));
+        });
+
+        connection.start()
+            .catch(err => console.error(err.toString()));
+    </script>
+</body>
+</html>
+üs
