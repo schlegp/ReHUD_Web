@@ -383,7 +383,7 @@ export function base64EncodedUint8ArrayToString(base64: string): string {
 
   array = array.slice(0, array.indexOf(0));
   const decoder = new TextDecoder('utf-8');
-  return decoder.decode(Buffer.from(array));
+  return decoder.decode(array.buffer);
 }
 
 export function insertCell(

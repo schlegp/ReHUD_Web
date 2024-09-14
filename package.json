@@ -16,7 +16,8 @@
     "webpack-node-externals": "^3.0.0"
   },
   "scripts": {
-    "prestart": ".\\node_modules\\.bin\\tsc && webpack --devtool source-map --config webpack.config.js",
+    "prestart": "webpack --config webpack.config.js",
+    "prestart:watch": "webpack --config webpack.config.js --watch",
     "start": "electronize start /args --inspect=9090",
     "build": "npm run prestart && electronize build /target win",
     "build:web": "webpack --config webpack.config.web.js"

@@ -3,8 +3,8 @@ const webpackNodeExternals = require('webpack-node-externals');
 
 module.exports = {
   entry: {
-    index: './wwwroot/js/index.js',
-    settings: './wwwroot/js/settingsPage.js',
+    index: './wwwroot/ts/index.ts',
+    settings: './wwwroot/ts/settingsPage.ts',
   },
   output: {
     filename: '[name]-bundle.js',

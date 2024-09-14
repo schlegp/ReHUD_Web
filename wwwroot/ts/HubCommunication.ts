@@ -1,13 +1,6 @@
 import * as signalR from "@microsoft/signalr";
 import PlatformHandler from './platform/PlatformHandler';
 
-
-const commsHandler: PlatformHandler = new PlatformHandler();
-commsHandler.registerEvent('port', (_: any, port: number) => {
-    HubCommunication.setPort(port);
-});
-commsHandler.sendCommand('get-port');
-
 export default class HubCommunication {
     private hubConnection: signalR.HubConnection;
     private invokeQueue: Array<() => void> = [];
@@ -38,6 +31,10 @@ export default class HubCommunication {
     }
 
     constructor() {
+        PlatformHandler.registerEvent('port', (_: any, port: number) => {
+            HubCommunication.setPort(port);
+        });
+        PlatformHandler.sendCommand('get-port');
         HubCommunication.onPortSet((port) => {
             this.hubConnection = new signalR.HubConnectionBuilder()
             .withUrl(`http://localhost:${port}/ReHUDHub`)

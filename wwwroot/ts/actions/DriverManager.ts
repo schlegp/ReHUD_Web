@@ -13,8 +13,6 @@ export default class DriverManager extends Action {
         return true;
     }
 
-    public commsHandler = new PlatformHandler();
-
     public drivers: {[uid: string]: Driver} = {};
     private removedDrivers: {[uid: string]: [Driver, number]} = {};
     private _leaderCrossedSFLineAt0: number = 0;
@@ -25,7 +23,7 @@ export default class DriverManager extends Action {
 
     constructor() {
         super('DriverManager', 0, true);
-        this.commsHandler.registerEvent('load-best-lap', (_e: Error, data: string) => {
+        PlatformHandler.registerEvent('load-best-lap', (_e: Error, data: string) => {
             console.log("load-best-lap: ", data);
             let parsed = JSON.parse(data);
 

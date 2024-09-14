@@ -48,9 +48,7 @@ import DRS from './hudElements/Drs';
 import P2P from './hudElements/PushToPass';
 import {GracePeriodBetweenPresets} from './SharedMemorySupplier';
 
-const commsHandler = new PlatformHandler();
-
-enableLogging(commsHandler, 'index');
+enableLogging('index');
 
 
 const hud = new Hud([
@@ -162,11 +160,11 @@ function elementToggled(elementId: TransformableId, shown: boolean) {
 function saveLayout() {
     hud.setIsInEditMode(false);
     exitEditMode();
-    commsHandler.sendCommand('set-hud-layout', JSON.stringify(hud.layoutElements));
+    PlatformHandler.sendCommand('set-hud-layout', JSON.stringify(hud.layoutElements));
 }
-commsHandler.registerEvent('save-hud-layout', saveLayout);
+PlatformHandler.registerEvent('save-hud-layout', saveLayout);
 
-commsHandler.registerEvent('toggle-element', (_: any, arg: any) => {
+PlatformHandler.registerEvent('toggle-element', (_: any, arg: any) => {
     elementToggled(arg[0], arg[1]);
 });
 
@@ -243,7 +241,7 @@ function _loadLayout(layout?: HudLayoutElements) {
 }
 
 async function  requestLayout() {
-    await commsHandler.sendCommand('get-hud-layout');
+    await PlatformHandler.sendCommand('get-hud-layout');
 }
 
 function addTransformable(id: TransformableId) {
@@ -294,14 +292,14 @@ function enterEditMode() {
     hud.setIsInEditMode(true);
 }
 
-function exitEditMode() {
+async function exitEditMode() {
     hud.setIsInEditMode(false);
-    commsHandler.sendCommand('request-layout-visibility');
+    await PlatformHandler.sendCommand('request-layout-visibility');
 }
 
 
-commsHandler.registerEvent('hide', hideHUD);
-commsHandler.registerEvent('show', showHUD);
+PlatformHandler.registerEvent('hide', hideHUD);
+PlatformHandler.registerEvent('show', showHUD);
 
 IpcCommunication.handle('edit-mode', async () => {
     enterEditMode();
@@ -310,7 +308,7 @@ IpcCommunication.handle('edit-mode', async () => {
 
 
 
-commsHandler.registerEvent('hud-layout', (_:any, arg: string) => {
+PlatformHandler.registerEvent('hud-layout', (_:any, arg: string) => {
     exitEditMode();
     console.log("hud-layout: ", arg)
     hud.layoutElements = JSON.parse(arg[0]) as HudLayoutElements;
@@ -323,7 +321,7 @@ let lastTime: number = null;
 let lastLogTime: number = null;
 const LOG_FPS_EVERY = 60; // seconds
 IpcCommunication.handle('r3eData', async (event, data_: string) => {
-    console.log("r3eData: ", data_);
+    // console.log("r3eData: ", data_);
     let data = JSON.parse(data_) as IExtendedShared;
 
     if (data.timestamp == 0) {
@@ -338,6 +336,7 @@ IpcCommunication.handle('r3eData', async (event, data_: string) => {
     } catch (e) {
         console.error('Error in EventEmitter.cycle', e);
     }
+
     hud.render(data, data.forceUpdateAll, isShown);
 
     const now = Date.now();
@@ -356,19 +355,19 @@ IpcCommunication.handle('r3eData', async (event, data_: string) => {
 });
 // hideHUD();
 
-commsHandler.registerEvent('set-setting', (_: any, arg: string) => {
+PlatformHandler.registerEvent('set-setting', (_: any, arg: string) => {
     console.log("set-setting: ", arg)
     const [key, value] = JSON.parse(arg);
 
     SettingsValue.set(key, value);
 });
 
-commsHandler.registerEvent('settings', (_: any, arg: string) => {
+PlatformHandler.registerEvent('settings', (_: any, arg: string) => {
     console.log("settings: ", arg);
     SettingsValue.loadSettings(JSON.parse(arg));
 });
 
-commsHandler.sendCommand('load-settings');
+PlatformHandler.sendCommand('load-settings');
 
 document.addEventListener('DOMContentLoaded', () => {
 

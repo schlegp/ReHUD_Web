@@ -1,7 +1,6 @@
-import PlatformHandler from './platform/PlatformHandler';
 import SharedMemoryConsumer from './SharedMemoryConsumer';
+import PlatformHandler from './platform/PlatformHandler';
 
-const commsHandler = new PlatformHandler();
 export default class SharedMemorySupplier {
     private static readonly consumers: SharedMemoryConsumer[] = [];
     private static usedKeys: string[] = null;
@@ -30,7 +29,7 @@ export default class SharedMemorySupplier {
         if (recompile || this.usedKeys === null) {
             this.compileUsedKeys();
         }
-        commsHandler.sendCommand('used-keys', this.usedKeys);
+        PlatformHandler.sendCommand('used-keys', this.usedKeys);
     }
 }
 

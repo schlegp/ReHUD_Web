@@ -32,7 +32,6 @@ import EventEmitter from './EventEmitter';
 import HubCommunication from './HubCommunication';
 import PlatformHandler from './platform/PlatformHandler';
 
-const commsHandler = new PlatformHandler();
 export default class Hud extends EventListener {
     public static readonly PROCESSING_WARNING_THRESHOLD = 9;
     public static readonly DELAY_WARNING_THRESHOLD = 200;
@@ -167,7 +166,7 @@ export default class Hud extends EventListener {
         } else if (diffStart > Hud.DELAY_WARNING_THRESHOLD) {
             console.warn('Data was received with a delay of', diffStart + 'ms');
         }
-        (window as any).r3eData = data; // for debugging
+        // (window as any).r3eData = data; // for debugging
         Hud.data = data;
         for (const action of this.alwaysExecuteActions) {
             if (forceAll || action.shouldExecute()) {
@@ -194,9 +193,9 @@ export default class Hud extends EventListener {
     }
     
     protected override onEnteredReplay(data: IShared): void {
-        commsHandler.sendCommand('load-replay-preset');
+        PlatformHandler.sendCommand('load-replay-preset');
     }
     protected override onLeftReplay(data: IShared): void {
-        commsHandler.sendCommand('unload-replay-preset');
+        PlatformHandler.sendCommand('unload-replay-preset');
     }
 }

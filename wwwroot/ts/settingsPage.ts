@@ -14,8 +14,7 @@ import ToggleSetting from "./settingComponents/ToggleSetting";
 import {enableLogging} from "./utils";
 import PlatformHandler from './platform/PlatformHandler';
 
-const commsHandler = new PlatformHandler();
-enableLogging(commsHandler, 'settingsPage');
+enableLogging('settingsPage');
 
 
 export type Writeable<T> = {-readonly [P in keyof T]: T[P]};
@@ -87,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function loadSettings(newSettings: Settings = null) {
     if (newSettings === null) {
-        commsHandler.sendCommand('load-settings');
+        PlatformHandler.sendCommand('load-settings');
     return;
   }
   settings = newSettings;
@@ -113,17 +112,17 @@ function loadSettings(newSettings: Settings = null) {
 }
 
 
-commsHandler.registerEvent('version', (_: any, v: string) => {
+PlatformHandler.registerEvent('version', (_: any, v: string) => {
   const version = document.getElementById('version');
   version.innerText = 'v' + v;
 });
 
-commsHandler.registerEvent('settings', (_: any, arg: string[]) => {
+PlatformHandler.registerEvent('settings', (_: any, arg: string[]) => {
   console.log("loadSettings: ", arg);
   loadSettings(JSON.parse(arg[0]));
 });
 
-commsHandler.registerEvent('hud-layouts', (_: any, layoutsJson: string[]) => {
+PlatformHandler.registerEvent('hud-layouts', (_: any, layoutsJson: string[]) => {
   const editLayout = document.getElementById('edit-layout');
   if (editLayout.innerText === SAVE_TEXT) {
     console.warn('Cannot load hud layouts while in edit mode.');
@@ -141,14 +140,14 @@ commsHandler.registerEvent('hud-layouts', (_: any, layoutsJson: string[]) => {
   }
   layouts.forEach(processHudLayout);
 });
-commsHandler.sendCommand('get-hud-layout');
+PlatformHandler.sendCommand('get-hud-layout');
 
 
 function getActivePresetButton(input: boolean = false) {
   return document.querySelector(`#${layoutTabsIdClass} > button.active` + (input ? ' > span' : ''));
 }
 
-commsHandler.registerEvent('discard-name-change', (_: any, arg: string[]) => {
+PlatformHandler.registerEvent('discard-name-change', (_: any, arg: string[]) => {
   if (activeLayout == null) return;
 
   activeLayout.name = arg[0];
@@ -212,10 +211,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const onclick = [
     {id: 'edit-layout', func: () => lockOverlay(true)},
     {id: 'cancel-reset-layout', func: () => lockOverlay(false)},
-    {id: 'show-log-file', func: () => commsHandler.sendCommand('show-log-file')},
+    {id: 'show-log-file', func: () => PlatformHandler.sendCommand('show-log-file')},
     {id: 'general-tablink', func: (event: MouseEvent) => tabChange(event, 'main-tabs', 'general-tab')},
     {id: 'layout-tablink', func: (event: MouseEvent) => tabChange(event, 'main-tabs', 'layout-tab')},
-    {id: 'new-layout-preset', func: () => commsHandler.sendCommand('new-hud-layout')},
+    {id: 'new-layout-preset', func: () => PlatformHandler.sendCommand('new-hud-layout')},
   ];
 
 
@@ -271,19 +270,19 @@ async function lockOverlay(save: boolean) {
   if (save && !didEdit) { // save clicked
     const newName = (getActivePresetButton(true) as HTMLSpanElement).innerText;
     if (activeLayout != null && activeLayout.name !== newName) {
-      commsHandler.sendCommand('update-preset-name', [activeLayout.name, newName]);
+      PlatformHandler.sendCommand('update-preset-name', [activeLayout.name, newName]);
       activeLayout.name = newName;
     }
 
     const newIsReplayLayout = isReplayLayout.getValue();
     if (activeLayout != null && activeLayout.isReplayLayout !== newIsReplayLayout) {
-      commsHandler.sendCommand('update-preset-is-replay', [activeLayout.name, newIsReplayLayout]);
+      PlatformHandler.sendCommand('update-preset-is-replay', [activeLayout.name, newIsReplayLayout]);
       activeLayout.isReplayLayout = newIsReplayLayout;
     }
   }
 
   if (!save && cancelResetButton.innerText === RESET_TEXT) { // reset clicked
-    commsHandler.sendCommand('reset-active-layout');
+    PlatformHandler.sendCommand('reset-active-layout');
   }
 
   const toggles = document.querySelectorAll('.element-toggle input');
@@ -293,7 +292,7 @@ async function lockOverlay(save: boolean) {
   });
 
   setTimeout(() => {
-    commsHandler.sendCommand('lock-overlay', [!didEdit, save]);
+    PlatformHandler.sendCommand('lock-overlay', [!didEdit, save]);
   }, 150);
 
   if (didEdit) {
@@ -309,7 +308,7 @@ async function lockOverlay(save: boolean) {
 let didCheckForUpdates = false;
 function checkForUpdates(val: boolean) {
   if (val) {
-    !didCheckForUpdates && commsHandler.sendCommand(CHECK_FOR_UPDATES);
+    !didCheckForUpdates && PlatformHandler.sendCommand(CHECK_FOR_UPDATES);
     didCheckForUpdates = true;
   }
 }
@@ -331,7 +330,7 @@ function toggleElement(event: Event) {
   }
   hudElement.shown = element.checked;
 
-  commsHandler.sendCommand('toggle-element', [elementId, element.checked]);
+  PlatformHandler.sendCommand('toggle-element', [elementId, element.checked]);
 }
 
 function processHudLayout(hudLayout: HudLayout) {
@@ -354,7 +353,7 @@ function processHudLayout(hudLayout: HudLayout) {
   deleteBtn.classList.add('material-symbols-outlined', 'icon-button', 'delete-preset');
   deleteBtn.innerText = 'delete';
   deleteBtn.addEventListener('click', () => {
-    commsHandler.sendCommand('delete-hud-layout', hudLayout.name);
+    PlatformHandler.sendCommand('delete-hud-layout', hudLayout.name);
   });
 
   tab.appendChild(input);
@@ -364,7 +363,7 @@ function processHudLayout(hudLayout: HudLayout) {
     if ((event.currentTarget as HTMLButtonElement).classList.contains('active')) return;
     tabChange(event, layoutTabsIdClass, hudLayout.name, false);
     loadLayout(hudLayout);
-    commsHandler.sendCommand('set-hud-layout', hudLayout.name);
+    PlatformHandler.sendCommand('set-hud-layout', hudLayout.name);
   });
   layoutTabs.insertBefore(tab, document.getElementById('new-layout-preset'));
 
