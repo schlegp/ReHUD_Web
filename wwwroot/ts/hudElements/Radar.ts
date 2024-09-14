@@ -1,8 +1,22 @@
-import {Hide, HudElementWithHideDelay} from "./HudElement.js";
-import SettingsValue from "../SettingsValue.js";
-import {RADAR_RANGE, RADAR_BEEP_MIN_SPEED, RADAR_LOW_DETAIL, RADAR_OPACITY, RADAR_FADE_RANGE, RADAR_POINTER} from "../consts.js";
-import {IDriverData, IPlayerData, IVector3} from "../r3eTypes.js";
-import {distanceFromZero, getRadarPointerRotation, mpsToKph, rotateVector, rotationMatrixFromEular, vectorSubtract,} from "../utils.js";
+import {Hide, HudElementWithHideDelay} from "./HudElement";
+import SettingsValue from "../SettingsValue";
+import {
+    RADAR_BEEP_MIN_SPEED,
+    RADAR_FADE_RANGE,
+    RADAR_LOW_DETAIL,
+    RADAR_OPACITY,
+    RADAR_POINTER,
+    RADAR_RANGE
+} from "../consts";
+import {IDriverData, IPlayerData, IVector3} from "../r3eTypes";
+import {
+    distanceFromZero,
+    getRadarPointerRotation,
+    mpsToKph,
+    rotateVector,
+    rotationMatrixFromEular,
+    vectorSubtract,
+} from "../utils";
 
 
 interface IExtendedDriverData extends IDriverData {

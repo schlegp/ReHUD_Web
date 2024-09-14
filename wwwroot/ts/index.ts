@@ -1,54 +1,56 @@
-﻿import {ipcRenderer} from 'electron';
+﻿import PlatformHandler from './platform/PlatformHandler';
 
-import EventEmitter from './EventEmitter.js';
-import Draggable, {DraggableEvent, TransformableHTMLElement} from './Draggable.js';
-import Hud from './Hud.js';
-import {IExtendedDriverInfo, computeUid, enableLogging} from './utils.js';
-import {HudLayoutElements} from './settingsPage.js';
-import CarSpeed from './hudElements/CarSpeed.js';
-import Gear from './hudElements/Gear.js';
-import EngineMap from './hudElements/EngineMap.js';
-import EngineBraking from './hudElements/EngineBraking.js';
-import BrakeBias from './hudElements/BrakeBias.js';
-import Revs from './hudElements/Revs.js';
-import FuelLeft from './hudElements/FuelLeft.js';
-import FuelPerLap from './hudElements/FuelPerLap.js';
-import FuelLapsLeft from './hudElements/FuelLapsLeft.js';
-import FuelTimeLeft from './hudElements/FuelTimeLeft.js';
-import FuelLastLap from './hudElements/FuelLastLap.js';
-import FuelToEnd from './hudElements/FuelToEnd.js';
-import FuelToAdd from './hudElements/FuelToAdd.js';
-import FuelElement from './hudElements/FuelElement.js';
-import Tires from './hudElements/Tires.js';
-import DriverInputs from './hudElements/DriverInputs.js';
-import Damage from './hudElements/Damage.js';
-import Assists from './hudElements/Assists.js';
-import RelativeViewer from './hudElements/RelativeViewer.js';
-import TimeLeft from './hudElements/TimeLeft.js';
-import EstimatedLapsLeft from './hudElements/EstimatedLapsLeft.js';
-import SessionLastLap from './hudElements/SessionLastLap.js';
-import SessionBestLap from './hudElements/SessionBestLap.js';
-import Position from './hudElements/Position.js';
-import Radar from './hudElements/Radar.js';
-import IncidentPoints from './hudElements/IncidentPoints.js';
-import SectorTimes from './hudElements/SectorTimes.js';
-import Delta from './hudElements/Delta.js';
-import SettingsValue from './SettingsValue.js';
-import {ELEMENT_SCALE_POWER, IExtendedShared, TRANSFORMABLES, TransformableId} from './consts.js';
-import TractionControl from './hudElements/TractionControl.js';
-import PositionBar from './hudElements/PositionBar.js';
-import CurrentLaptime from './hudElements/CurrentLaptime.js';
-import StrengthOfField from './hudElements/StrengthOfField.js';
-import AlltimeBestLap from './hudElements/AlltimeBestLap.js';
-import PitTimer from './hudElements/PitTimer.js';
-import CompletedLaps from './hudElements/CompletedLaps.js';
-import IpcCommunication from './IpcCommunication.js';
-import Rake from './hudElements/Rake.js';
-import DRS from './hudElements/Drs.js';
-import P2P from './hudElements/PushToPass.js';
-import {GracePeriodBetweenPresets} from './SharedMemorySupplier.js';
+import EventEmitter from './EventEmitter';
+import Draggable, {DraggableEvent, TransformableHTMLElement} from './Draggable';
+import Hud from './Hud';
+import {computeUid, enableLogging, IExtendedDriverInfo} from './utils';
+import {HudLayoutElements} from './settingsPage';
+import CarSpeed from './hudElements/CarSpeed';
+import Gear from './hudElements/Gear';
+import EngineMap from './hudElements/EngineMap';
+import EngineBraking from './hudElements/EngineBraking';
+import BrakeBias from './hudElements/BrakeBias';
+import Revs from './hudElements/Revs';
+import FuelLeft from './hudElements/FuelLeft';
+import FuelPerLap from './hudElements/FuelPerLap';
+import FuelLapsLeft from './hudElements/FuelLapsLeft';
+import FuelTimeLeft from './hudElements/FuelTimeLeft';
+import FuelLastLap from './hudElements/FuelLastLap';
+import FuelToEnd from './hudElements/FuelToEnd';
+import FuelToAdd from './hudElements/FuelToAdd';
+import FuelElement from './hudElements/FuelElement';
+import Tires from './hudElements/Tires';
+import DriverInputs from './hudElements/DriverInputs';
+import Damage from './hudElements/Damage';
+import Assists from './hudElements/Assists';
+import RelativeViewer from './hudElements/RelativeViewer';
+import TimeLeft from './hudElements/TimeLeft';
+import EstimatedLapsLeft from './hudElements/EstimatedLapsLeft';
+import SessionLastLap from './hudElements/SessionLastLap';
+import SessionBestLap from './hudElements/SessionBestLap';
+import Position from './hudElements/Position';
+import Radar from './hudElements/Radar';
+import IncidentPoints from './hudElements/IncidentPoints';
+import SectorTimes from './hudElements/SectorTimes';
+import Delta from './hudElements/Delta';
+import SettingsValue from './SettingsValue';
+import {ELEMENT_SCALE_POWER, IExtendedShared, TransformableId, TRANSFORMABLES} from './consts';
+import TractionControl from './hudElements/TractionControl';
+import PositionBar from './hudElements/PositionBar';
+import CurrentLaptime from './hudElements/CurrentLaptime';
+import StrengthOfField from './hudElements/StrengthOfField';
+import AlltimeBestLap from './hudElements/AlltimeBestLap';
+import PitTimer from './hudElements/PitTimer';
+import CompletedLaps from './hudElements/CompletedLaps';
+import IpcCommunication from './IpcCommunication';
+import Rake from './hudElements/Rake';
+import DRS from './hudElements/Drs';
+import P2P from './hudElements/PushToPass';
+import {GracePeriodBetweenPresets} from './SharedMemorySupplier';
 
-enableLogging(ipcRenderer, 'index.js');
+const commsHandler = new PlatformHandler();
+
+enableLogging(commsHandler, 'index');
 
 
 const hud = new Hud([
@@ -160,11 +162,11 @@ function elementToggled(elementId: TransformableId, shown: boolean) {
 function saveLayout() {
     hud.setIsInEditMode(false);
     exitEditMode();
-    ipcRenderer.send('set-hud-layout', JSON.stringify(hud.layoutElements));
+    commsHandler.sendCommand('set-hud-layout', JSON.stringify(hud.layoutElements));
 }
-ipcRenderer.on('save-hud-layout', saveLayout);
+commsHandler.registerEvent('save-hud-layout', saveLayout);
 
-ipcRenderer.on('toggle-element', (event, arg) => {
+commsHandler.registerEvent('toggle-element', (_: any, arg: any) => {
     elementToggled(arg[0], arg[1]);
 });
 
@@ -240,8 +242,8 @@ function _loadLayout(layout?: HudLayoutElements) {
     setTimeout(() => GracePeriodBetweenPresets.isInGracePeriod = false, GracePeriodBetweenPresets.DURATION);
 }
 
-function requestLayout() {
-    ipcRenderer.send('get-hud-layout');
+async function  requestLayout() {
+    await commsHandler.sendCommand('get-hud-layout');
 }
 
 function addTransformable(id: TransformableId) {
@@ -294,12 +296,12 @@ function enterEditMode() {
 
 function exitEditMode() {
     hud.setIsInEditMode(false);
-    ipcRenderer.send('request-layout-visibility');
+    commsHandler.sendCommand('request-layout-visibility');
 }
 
 
-ipcRenderer.on('hide', hideHUD);
-ipcRenderer.on('show', showHUD);
+commsHandler.registerEvent('hide', hideHUD);
+commsHandler.registerEvent('show', showHUD);
 
 IpcCommunication.handle('edit-mode', async () => {
     enterEditMode();
@@ -308,8 +310,9 @@ IpcCommunication.handle('edit-mode', async () => {
 
 
 
-ipcRenderer.on('hud-layout', (e, arg) => {
+commsHandler.registerEvent('hud-layout', (_:any, arg: string) => {
     exitEditMode();
+    console.log("hud-layout: ", arg)
     hud.layoutElements = JSON.parse(arg[0]) as HudLayoutElements;
     loadLayout(hud.layoutElements);
 });
@@ -320,6 +323,7 @@ let lastTime: number = null;
 let lastLogTime: number = null;
 const LOG_FPS_EVERY = 60; // seconds
 IpcCommunication.handle('r3eData', async (event, data_: string) => {
+    console.log("r3eData: ", data_);
     let data = JSON.parse(data_) as IExtendedShared;
 
     if (data.timestamp == 0) {
@@ -350,19 +354,21 @@ IpcCommunication.handle('r3eData', async (event, data_: string) => {
     }
     lastTime = now;
 });
-hideHUD();
+// hideHUD();
 
-ipcRenderer.on('set-setting', (e, arg) => {
+commsHandler.registerEvent('set-setting', (_: any, arg: string) => {
+    console.log("set-setting: ", arg)
     const [key, value] = JSON.parse(arg);
 
     SettingsValue.set(key, value);
 });
 
-ipcRenderer.on('settings', (e, arg) => {
+commsHandler.registerEvent('settings', (_: any, arg: string) => {
+    console.log("settings: ", arg);
     SettingsValue.loadSettings(JSON.parse(arg));
 });
 
-ipcRenderer.send('load-settings');
+commsHandler.sendCommand('load-settings');
 
 document.addEventListener('DOMContentLoaded', () => {
 

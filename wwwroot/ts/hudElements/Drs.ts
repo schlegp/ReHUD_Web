@@ -1,6 +1,6 @@
-import HudElement, {Hide} from "./HudElement.js";
-import {NA} from "../consts.js";
-import {IDrs} from "../r3eTypes.js";
+import HudElement, {Hide} from "./HudElement";
+import {NA} from "../consts";
+import {IDrs} from "../r3eTypes";
 
 export default class Rake extends HudElement {
     override sharedMemoryKeys: string[] = ['drs'];

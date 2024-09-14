@@ -1,5 +1,5 @@
-import HudElement, {Hide, Style} from "./HudElement.js";
-import {valueIsValidAssertNull, NA, INC_POINTS_RED_THRESHOLD} from "../consts.js";
+import HudElement, {Hide, Style} from "./HudElement";
+import {INC_POINTS_RED_THRESHOLD, NA, valueIsValidAssertNull} from "../consts";
 
 export default class IncidentPoints extends HudElement {
     override sharedMemoryKeys: string[] = ['incidentPoints', 'maxIncidentPoints'];

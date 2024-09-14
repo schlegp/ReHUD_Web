@@ -1,5 +1,5 @@
-import HudElement from "./HudElement.js";
-import {validNumberOrDefault, valueIsValidAssertNull} from "../consts.js";
+import HudElement from "./HudElement";
+import {validNumberOrDefault, valueIsValidAssertNull} from "../consts";
 
 export default class DriverInputs extends HudElement {
     override sharedMemoryKeys: string[] = ['throttleRaw', 'throttle', 'brakeRaw', 'brake', 'clutchRaw', 'clutch', 'steerInputRaw', 'steerWheelRangeDegrees'];

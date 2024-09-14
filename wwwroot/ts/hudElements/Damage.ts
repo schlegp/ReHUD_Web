@@ -1,5 +1,5 @@
-import HudElement, {Hide} from "./HudElement.js";
-import {ICarDamage} from "../r3eTypes.js";
+import HudElement, {Hide} from "./HudElement";
+import {ICarDamage} from "../r3eTypes";
 
 export default class Damage extends HudElement {
     override sharedMemoryKeys: string[] = ['carDamage'];

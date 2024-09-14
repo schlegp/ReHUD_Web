@@ -1,6 +1,6 @@
-import HudElement from "./HudElement.js";
-import {laptimeFormat} from "../consts.js";
-import {Driver} from '../utils.js';
+import HudElement from "./HudElement";
+import {laptimeFormat} from "../consts";
+import Driver from '../Driver';
 
 export default class AlltimeBestLap extends HudElement {
     override sharedMemoryKeys: string[] = [];

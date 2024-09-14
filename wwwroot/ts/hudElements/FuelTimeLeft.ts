@@ -1,6 +1,6 @@
-import HudElement from "./HudElement.js";
-import {NA, allValuesAreValid, timeFormat} from "../consts.js";
-import {EEngineType, IDriverInfo} from '../r3eTypes.js';
+import HudElement from "./HudElement";
+import {allValuesAreValid, NA, timeFormat} from "../consts";
+import {EEngineType, IDriverInfo} from '../r3eTypes';
 
 export default class FuelTimeLeft extends HudElement {
     override sharedMemoryKeys: string[] = ['vehicleInfo', 'fuelLeft', 'batterySoC', '+fuelPerLap', '+averageLapTime'];

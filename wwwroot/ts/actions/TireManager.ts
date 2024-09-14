@@ -1,11 +1,6 @@
-import Action from '../Action.js';
-import {
-  IExtendedShared,
-  addObjects,
-  multiplyObject,
-  valueIsValidAssertNull,
-} from '../consts.js';
-import IShared, { ESession, IDriverData, ITireData } from '../r3eTypes.js';
+import Action from '../Action';
+import {addObjects, IExtendedShared, multiplyObject, valueIsValidAssertNull,} from '../consts';
+import IShared, {ESession, IDriverData, ITireData} from '../r3eTypes';
 
 export default class TireManager extends Action {
   override sharedMemoryKeys: string[] = ['tireWear', 'vehicleInfo', 'layoutId', 'tireWearActive', 'gameInReplay', 'gamePaused', 'currentLapValid'];

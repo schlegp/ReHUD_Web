@@ -1,5 +1,5 @@
-import HudElement from "./HudElement.js";
-import {valueIsValidAssertNull} from "../consts.js";
+import HudElement from "./HudElement";
+import {valueIsValidAssertNull} from "../consts";
 
 export default class Revs extends HudElement {
     override sharedMemoryKeys: string[] = ['engineRps', 'maxEngineRps', 'upshiftRps', 'pitLimiter'];

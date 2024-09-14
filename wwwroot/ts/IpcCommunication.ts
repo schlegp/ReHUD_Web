@@ -1,5 +1,7 @@
-import {ipcRenderer} from 'electron';
-import {TimeoutError, promiseTimeout} from './consts.js';
+import PlatformHandler from './platform/PlatformHandler';
+import {promiseTimeout, TimeoutError} from './consts';
+
+const commsHandler = new PlatformHandler();
 
 export default class IpcCommunication {
     /**
@@ -7,9 +9,10 @@ export default class IpcCommunication {
      * @param channel - The channel to listen to
      * @param callback - The callback to call when the channel is received. The value returned from the callback will be sent back to the main process (awaited if it is a promise).
      */
-    static handle(channel: string, callback: (event: Electron.IpcRendererEvent, args: any) => Promise<any>) {
-        ipcRenderer.on(channel, (event, args) => {
+    static handle(channel: string, callback: (event: any, args: any) => Promise<any>) {
+        commsHandler.registerEvent(channel, (event: any, args: string) => {
             (async () => {
+                console.log("registerEvent: ", args);
                 const data = JSON.parse(args[0]);
                 const conversationId: string = data[0];
                 let res: any = null;
@@ -28,7 +31,7 @@ export default class IpcCommunication {
                     response.push(res);
                 }
 
-                ipcRenderer.send(conversationId, JSON.stringify(response));
+                commsHandler.sendCommand(conversationId, JSON.stringify(response));
             })();
         });
     }

@@ -1,4 +1,4 @@
-import SettingComponent from "./SettingComponent.js";
+import SettingComponent from "./SettingComponent";
 
 
 export default class ChoiceSetting extends SettingComponent {

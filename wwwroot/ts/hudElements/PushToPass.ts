@@ -1,6 +1,6 @@
-import HudElement, {Hide} from "./HudElement.js";
-import {valueIsValid, NA, valueIsValidAssertNull} from "../consts.js";
-import IShared, {IPushToPass} from "../r3eTypes.js";
+import HudElement, {Hide} from "./HudElement";
+import {NA, valueIsValid, valueIsValidAssertNull} from "../consts";
+import IShared, {IPushToPass} from "../r3eTypes";
 
 export default class Rake extends HudElement {
     override sharedMemoryKeys: string[] = ['pushToPass'];

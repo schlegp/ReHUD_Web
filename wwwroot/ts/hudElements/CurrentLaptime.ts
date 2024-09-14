@@ -1,6 +1,6 @@
-import HudElement, {Style} from "./HudElement.js";
-import {laptimeFormat, valueIsValidAssertNull} from "../consts.js";
-import {Driver} from '../utils.js';
+import HudElement, {Style} from "./HudElement";
+import {laptimeFormat, valueIsValidAssertNull} from "../consts";
+import Driver from '../Driver';
 
 export default class CurrentLaptime extends HudElement {
     override sharedMemoryKeys: string[] = ['lapTimeCurrentSelf'];

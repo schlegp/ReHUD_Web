@@ -1,5 +1,5 @@
-import HudElement, {Hide} from "./HudElement.js";
-import {NA, valueIsValidAssertNull} from "../consts.js";
+import HudElement, {Hide} from "./HudElement";
+import {NA, valueIsValidAssertNull} from "../consts";
 
 export default class CompletedLaps extends HudElement {
     override sharedMemoryKeys: string[] = ['completedLaps'];

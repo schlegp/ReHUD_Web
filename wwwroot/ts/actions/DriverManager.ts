@@ -1,10 +1,11 @@
-import {ipcRenderer} from "electron";
-import Action from "../Action.js";
-import {IExtendedShared, sessionPhaseNotDriving, valueIsValidAssertNull} from "../consts.js";
-import IShared, {ESession, IDriverData} from "../r3eTypes.js";
-import {Driver, IExtendedDriverData, getUid} from "../utils.js";
-import EventEmitter from '../EventEmitter.js';
-import Hud from '../Hud.js';
+import Action from "../Action";
+import {IExtendedShared, sessionPhaseNotDriving, valueIsValidAssertNull} from "../consts";
+import IShared, {ESession, IDriverData} from "../r3eTypes";
+import {getUid, IExtendedDriverData} from "../utils";
+import Driver from "../Driver"
+import EventEmitter from '../EventEmitter';
+import Hud from '../Hud';
+import PlatformHandler from '../platform/PlatformHandler'
 
 export default class DriverManager extends Action {
     override sharedMemoryKeys: string[] = ['driverData', 'lapTimePreviousSelf', 'completedLaps', 'sessionType', 'gameInMenus', 'gameInReplay', 'gamePaused', 'layoutId', 'sessionTimeRemaining', 'sessionPhase', 'position', 'layoutLength'];
@@ -12,6 +13,7 @@ export default class DriverManager extends Action {
         return true;
     }
 
+    public commsHandler = new PlatformHandler();
 
     public drivers: {[uid: string]: Driver} = {};
     private removedDrivers: {[uid: string]: [Driver, number]} = {};
@@ -23,11 +25,11 @@ export default class DriverManager extends Action {
 
     constructor() {
         super('DriverManager', 0, true);
+        this.commsHandler.registerEvent('load-best-lap', (_e: Error, data: string) => {
+            console.log("load-best-lap: ", data);
+            let parsed = JSON.parse(data);
 
-        ipcRenderer.on('load-best-lap', (_e, data: any) => {
-            data = JSON.parse(data);
-
-            Driver.loadBestLap(data.bestLapTime, data.lapPoints, data.pointsPerMeter);
+            Driver.loadBestLap(parsed.bestLapTime, parsed.lapPoints, parsed.pointsPerMeter);
         });
     }
 
@@ -160,6 +162,7 @@ export default class DriverManager extends Action {
                 
                 if (shouldLoad) {
                     Hud.hub.invoke('LoadBestLap', data.layoutId, driver.driverInfo.classId).then((data) => {
+                        console.log("LoadBestLap: ", data)
                         const dataObj = JSON.parse(data);
                         if (dataObj.bestLapTime != null) {
                             Driver.loadBestLap(dataObj.bestLapTime, dataObj.lapPoints, dataObj.pointsPerMeter);

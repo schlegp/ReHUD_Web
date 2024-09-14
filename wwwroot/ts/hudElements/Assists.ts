@@ -1,6 +1,6 @@
-import HudElement from "./HudElement.js";
-import {valueIsValidAssertNull} from "../consts.js";
-import {IAidSettings} from "../r3eTypes.js";
+import HudElement from "./HudElement";
+import {valueIsValidAssertNull} from "../consts";
+import {IAidSettings} from "../r3eTypes";
 
 export default class Assists extends HudElement {
     override sharedMemoryKeys: string[] = ['aidSettings'];

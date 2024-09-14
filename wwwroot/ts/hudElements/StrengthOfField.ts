@@ -1,6 +1,6 @@
-import HudElement, { Hide } from "./HudElement.js";
-import {IDriverData} from "../r3eTypes.js";
-import { NA } from "../consts.js";
+import HudElement, {Hide} from "./HudElement";
+import {IDriverData} from "../r3eTypes";
+import {NA} from "../consts";
 
 export default class StrengthOfField extends HudElement {
     override sharedMemoryKeys: string[] = ['driverData'];

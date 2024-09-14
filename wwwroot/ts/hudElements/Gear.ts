@@ -1,6 +1,6 @@
-import {TRUCK_CLASS_ID} from '../consts.js';
-import {EEngineType, IDriverInfo} from '../r3eTypes.js';
-import HudElement from "./HudElement.js";
+import {TRUCK_CLASS_ID} from '../consts';
+import {EEngineType, IDriverInfo} from '../r3eTypes';
+import HudElement from "./HudElement";
 
 export default class Gear extends HudElement {
     override sharedMemoryKeys: string[] = ['gear', 'vehicleInfo'];

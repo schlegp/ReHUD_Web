@@ -1,5 +1,5 @@
-import HudElement from "./HudElement.js";
-import {NA, allValuesAreValid, lerpRGB} from "../consts.js";
+import HudElement from "./HudElement";
+import {allValuesAreValid, lerpRGB, NA} from "../consts";
 
 export default class FuelLastLap extends HudElement {
     override sharedMemoryKeys: string[] = ['+fuelLastLap', '+fuelPerLap'];

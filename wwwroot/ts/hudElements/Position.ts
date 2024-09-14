@@ -1,6 +1,6 @@
-import HudElement, {Hide} from "./HudElement.js";
-import {NA, valueIsValidAssertNull} from "../consts.js";
-import {IDriverData} from "../r3eTypes.js";
+import HudElement, {Hide} from "./HudElement";
+import {NA, valueIsValidAssertNull} from "../consts";
+import {IDriverData} from "../r3eTypes";
 
 export default class Position extends HudElement {
     override sharedMemoryKeys: string[] = ['position', 'positionClass', 'driverData'];

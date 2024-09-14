@@ -1,5 +1,5 @@
-import HudElement, {Hide} from "./HudElement.js";
-import {valueIsValidAssertNull} from "../consts.js";
+import HudElement, {Hide} from "./HudElement";
+import {valueIsValidAssertNull} from "../consts";
 
 export default class FuelElement extends HudElement {
     override sharedMemoryKeys: string[] = ['fuelUseActive'];

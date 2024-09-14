@@ -1,5 +1,5 @@
-import HudElement, {Hide, Style} from "./HudElement.js";
-import {valueIsValidAssertNull, NA} from "../consts.js";
+import HudElement, {Hide, Style} from "./HudElement";
+import {NA, valueIsValidAssertNull} from "../consts";
 
 export default class TractionControl extends HudElement {
     override sharedMemoryKeys: string[] = ['tractionControlSetting', 'tractionControlPercent'];

@@ -1,10 +1,12 @@
 import * as signalR from "@microsoft/signalr";
-import {ipcRenderer} from 'electron';
+import PlatformHandler from './platform/PlatformHandler';
 
-ipcRenderer.on('port', (event, port) => {
+
+const commsHandler: PlatformHandler = new PlatformHandler();
+commsHandler.registerEvent('port', (_: any, port: number) => {
     HubCommunication.setPort(port);
 });
-ipcRenderer.send('get-port');
+commsHandler.sendCommand('get-port');
 
 export default class HubCommunication {
     private hubConnection: signalR.HubConnection;

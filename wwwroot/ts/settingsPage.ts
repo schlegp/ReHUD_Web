@@ -1,12 +1,21 @@
-import {TransformableId, CHECK_FOR_UPDATES, SPEED_UNITS, PRESSURE_UNITS, RADAR_RANGE, RADAR_BEEP_VOLUME, HUD_LAYOUT, TRANSFORMABLES} from "./consts.js";
-import ChoiceSetting from "./settingComponents/ChoiceSetting.js";
-import SettingComponent from "./settingComponents/SettingComponent.js";
-import SliderSetting from "./settingComponents/SliderSetting.js";
-import ToggleSetting from "./settingComponents/ToggleSetting.js";
-import {enableLogging} from "./utils.js";
-import {ipcRenderer} from 'electron';
+import {
+    CHECK_FOR_UPDATES,
+    PRESSURE_UNITS,
+    RADAR_BEEP_VOLUME,
+    RADAR_RANGE,
+    SPEED_UNITS,
+    TransformableId,
+    TRANSFORMABLES
+} from "./consts";
+import ChoiceSetting from "./settingComponents/ChoiceSetting";
+import SettingComponent from "./settingComponents/SettingComponent";
+import SliderSetting from "./settingComponents/SliderSetting";
+import ToggleSetting from "./settingComponents/ToggleSetting";
+import {enableLogging} from "./utils";
+import PlatformHandler from './platform/PlatformHandler';
 
-enableLogging(ipcRenderer, 'settingsPage.js');
+const commsHandler = new PlatformHandler();
+enableLogging(commsHandler, 'settingsPage');
 
 
 export type Writeable<T> = {-readonly [P in keyof T]: T[P]};
@@ -77,8 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function loadSettings(newSettings: Settings = null) {
-  if (newSettings === null) {
-    ipcRenderer.send('load-settings');
+    if (newSettings === null) {
+        commsHandler.sendCommand('load-settings');
     return;
   }
   settings = newSettings;
@@ -104,21 +113,23 @@ function loadSettings(newSettings: Settings = null) {
 }
 
 
-ipcRenderer.on('version', (e, v) => {
+commsHandler.registerEvent('version', (_: any, v: string) => {
   const version = document.getElementById('version');
   version.innerText = 'v' + v;
 });
 
-ipcRenderer.on('settings', (e, arg) => {
+commsHandler.registerEvent('settings', (_: any, arg: string[]) => {
+  console.log("loadSettings: ", arg);
   loadSettings(JSON.parse(arg[0]));
 });
 
-ipcRenderer.on('hud-layouts', (e, layoutsJson) => {
+commsHandler.registerEvent('hud-layouts', (_: any, layoutsJson: string[]) => {
   const editLayout = document.getElementById('edit-layout');
   if (editLayout.innerText === SAVE_TEXT) {
     console.warn('Cannot load hud layouts while in edit mode.');
     return;
   }
+  console.log("layouts: ", layoutsJson);
   const layouts: HudLayout[] = JSON.parse(layoutsJson[0]);
   hudLayouts = layouts;
   const layoutTabs = document.getElementById(layoutTabsIdClass);
@@ -130,14 +141,14 @@ ipcRenderer.on('hud-layouts', (e, layoutsJson) => {
   }
   layouts.forEach(processHudLayout);
 });
-ipcRenderer.send('get-hud-layout');
+commsHandler.sendCommand('get-hud-layout');
 
 
 function getActivePresetButton(input: boolean = false) {
   return document.querySelector(`#${layoutTabsIdClass} > button.active` + (input ? ' > span' : ''));
 }
 
-ipcRenderer.on('discard-name-change', (e, arg) => {
+commsHandler.registerEvent('discard-name-change', (_: any, arg: string[]) => {
   if (activeLayout == null) return;
 
   activeLayout.name = arg[0];
@@ -201,10 +212,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const onclick = [
     {id: 'edit-layout', func: () => lockOverlay(true)},
     {id: 'cancel-reset-layout', func: () => lockOverlay(false)},
-    {id: 'show-log-file', func: () => ipcRenderer.send('show-log-file')},
+    {id: 'show-log-file', func: () => commsHandler.sendCommand('show-log-file')},
     {id: 'general-tablink', func: (event: MouseEvent) => tabChange(event, 'main-tabs', 'general-tab')},
     {id: 'layout-tablink', func: (event: MouseEvent) => tabChange(event, 'main-tabs', 'layout-tab')},
-    {id: 'new-layout-preset', func: () => ipcRenderer.send('new-hud-layout')},
+    {id: 'new-layout-preset', func: () => commsHandler.sendCommand('new-hud-layout')},
   ];
 
 
@@ -260,19 +271,19 @@ async function lockOverlay(save: boolean) {
   if (save && !didEdit) { // save clicked
     const newName = (getActivePresetButton(true) as HTMLSpanElement).innerText;
     if (activeLayout != null && activeLayout.name !== newName) {
-      ipcRenderer.send('update-preset-name', [activeLayout.name, newName]);
+      commsHandler.sendCommand('update-preset-name', [activeLayout.name, newName]);
       activeLayout.name = newName;
     }
 
     const newIsReplayLayout = isReplayLayout.getValue();
     if (activeLayout != null && activeLayout.isReplayLayout !== newIsReplayLayout) {
-      ipcRenderer.send('update-preset-is-replay', [activeLayout.name, newIsReplayLayout]);
+      commsHandler.sendCommand('update-preset-is-replay', [activeLayout.name, newIsReplayLayout]);
       activeLayout.isReplayLayout = newIsReplayLayout;
     }
   }
 
   if (!save && cancelResetButton.innerText === RESET_TEXT) { // reset clicked
-    ipcRenderer.send('reset-active-layout');
+    commsHandler.sendCommand('reset-active-layout');
   }
 
   const toggles = document.querySelectorAll('.element-toggle input');
@@ -282,7 +293,7 @@ async function lockOverlay(save: boolean) {
   });
 
   setTimeout(() => {
-    ipcRenderer.send('lock-overlay', [!didEdit, save]);
+    commsHandler.sendCommand('lock-overlay', [!didEdit, save]);
   }, 150);
 
   if (didEdit) {
@@ -298,7 +309,7 @@ async function lockOverlay(save: boolean) {
 let didCheckForUpdates = false;
 function checkForUpdates(val: boolean) {
   if (val) {
-    !didCheckForUpdates && ipcRenderer.send(CHECK_FOR_UPDATES);
+    !didCheckForUpdates && commsHandler.sendCommand(CHECK_FOR_UPDATES);
     didCheckForUpdates = true;
   }
 }
@@ -320,7 +331,7 @@ function toggleElement(event: Event) {
   }
   hudElement.shown = element.checked;
 
-  ipcRenderer.send('toggle-element', [elementId, element.checked]);
+  commsHandler.sendCommand('toggle-element', [elementId, element.checked]);
 }
 
 function processHudLayout(hudLayout: HudLayout) {
@@ -343,7 +354,7 @@ function processHudLayout(hudLayout: HudLayout) {
   deleteBtn.classList.add('material-symbols-outlined', 'icon-button', 'delete-preset');
   deleteBtn.innerText = 'delete';
   deleteBtn.addEventListener('click', () => {
-    ipcRenderer.send('delete-hud-layout', hudLayout.name);
+    commsHandler.sendCommand('delete-hud-layout', hudLayout.name);
   });
 
   tab.appendChild(input);
@@ -353,7 +364,7 @@ function processHudLayout(hudLayout: HudLayout) {
     if ((event.currentTarget as HTMLButtonElement).classList.contains('active')) return;
     tabChange(event, layoutTabsIdClass, hudLayout.name, false);
     loadLayout(hudLayout);
-    ipcRenderer.send('set-hud-layout', hudLayout.name);
+    commsHandler.sendCommand('set-hud-layout', hudLayout.name);
   });
   layoutTabs.insertBefore(tab, document.getElementById('new-layout-preset'));
 

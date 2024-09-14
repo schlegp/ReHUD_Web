@@ -1,5 +1,5 @@
-import HudElement from "./HudElement.js";
-import {valueIsValidAssertNull, NA} from "../consts.js";
+import HudElement from "./HudElement";
+import {NA, valueIsValidAssertNull} from "../consts";
 
 export default class EngineBraking extends HudElement {
     override sharedMemoryKeys: string[] = ['engineBrakeSetting'];

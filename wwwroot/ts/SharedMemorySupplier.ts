@@ -1,6 +1,7 @@
-import {ipcRenderer} from 'electron';
-import SharedMemoryConsumer from './SharedMemoryConsumer.js';
+import PlatformHandler from './platform/PlatformHandler';
+import SharedMemoryConsumer from './SharedMemoryConsumer';
 
+const commsHandler = new PlatformHandler();
 export default class SharedMemorySupplier {
     private static readonly consumers: SharedMemoryConsumer[] = [];
     private static usedKeys: string[] = null;
@@ -29,7 +30,7 @@ export default class SharedMemorySupplier {
         if (recompile || this.usedKeys === null) {
             this.compileUsedKeys();
         }
-        ipcRenderer.send('used-keys', this.usedKeys);
+        commsHandler.sendCommand('used-keys', this.usedKeys);
     }
 }
 

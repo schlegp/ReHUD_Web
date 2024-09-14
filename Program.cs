@@ -11,7 +11,7 @@ public static class Program
 {
     public static void Main(string[] args) {
 #if DEBUG
-        Debugger.Launch();
+        //Debugger.Launch();
 #endif
         try {
             CreateWebHostBuilder(args).Build().Run();

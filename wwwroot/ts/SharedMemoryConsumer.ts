@@ -1,4 +1,4 @@
-import SharedMemorySupplier from './SharedMemorySupplier.js';
+import SharedMemorySupplier from './SharedMemorySupplier';
 
 /**
  * The shared memory data is a rather large object, and not all consumers need all of it.

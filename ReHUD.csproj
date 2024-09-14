@@ -6,6 +6,10 @@
     <RootNamespace>ReHUD</RootNamespace>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\ts\global.d.ts" />
+    <Content Remove="wwwroot\ts\platform\PlatformHandler.ts" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ElectronNET.API" Version="99.0.8" />
@@ -13,6 +17,11 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PrecisionTimer.NET" Version="2.4.0.3" />
     <PackageReference Include="System.Management" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\ts\global.d.ts" />
+    <TypeScriptCompile Include="wwwroot\ts\platform\PlatformHandler.ts" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,4 @@
-import SharedMemoryConsumer from './SharedMemoryConsumer.js';
+import SharedMemoryConsumer from './SharedMemoryConsumer';
 
 export default abstract class NamedEntity extends SharedMemoryConsumer {
   private readonly name: string;

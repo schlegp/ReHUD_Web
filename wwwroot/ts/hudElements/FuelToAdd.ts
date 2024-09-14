@@ -1,6 +1,6 @@
-import HudElement from "./HudElement.js";
-import {NA, allValuesAreValid, lerpRGB} from "../consts.js";
-import {EEngineType, IDriverInfo} from '../r3eTypes.js';
+import HudElement from "./HudElement";
+import {allValuesAreValid, lerpRGB, NA} from "../consts";
+import {EEngineType, IDriverInfo} from '../r3eTypes';
 
 export default class FuelToAdd extends HudElement {
     override sharedMemoryKeys: string[] = ['+lapsUntilFinish', 'vehicleInfo', 'fuelLeft', 'batterySoC', '+fuelPerLap'];

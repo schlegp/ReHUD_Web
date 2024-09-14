@@ -1,18 +1,38 @@
-import {ipcRenderer} from 'electron';
-import Action from "./Action.js";
-import EventListener from './EventListener.js';
-import SettingsValue from "./SettingsValue.js";
-import DriverManager from "./actions/DriverManager.js";
-import RankedData from "./actions/RankedData.js";
-import TireManager from './actions/TireManager.js';
-import {SPEED_UNITS, PRESSURE_UNITS, RADAR_RANGE, DEFAULT_RADAR_RADIUS, IExtendedShared, RADAR_BEEP_VOLUME, RELATIVE_SAFE_MODE, POSITION_BAR_CELL_COUNT, DELTA_MODE, SHOW_DELTA_ON_INVALID_LAPS, P2P_READY_VOLUME, RADAR_LOW_DETAIL, RADAR_OPACITY, RADAR_POINTER, RADAR_FADE_RANGE, FRAMERATE, HARDWARE_ACCELERATION, VR_MODE} from "./consts.js";
-import IShared from './r3eTypes.js';
-import {AudioController, Logger} from "./utils.js";
-import {HudLayoutElements} from './settingsPage.js';
-import SharedMemorySupplier, {GracePeriodBetweenPresets} from './SharedMemorySupplier.js';
-import EventEmitter from './EventEmitter.js';
-import HubCommunication from './HubCommunication.js';
+import Action from "./Action";
+import EventListener from './EventListener';
+import SettingsValue from "./SettingsValue";
+import DriverManager from "./actions/DriverManager";
+import RankedData from "./actions/RankedData";
+import TireManager from './actions/TireManager';
+import {
+    DEFAULT_RADAR_RADIUS,
+    DELTA_MODE,
+    FRAMERATE,
+    HARDWARE_ACCELERATION,
+    IExtendedShared,
+    P2P_READY_VOLUME,
+    POSITION_BAR_CELL_COUNT,
+    PRESSURE_UNITS,
+    RADAR_BEEP_VOLUME,
+    RADAR_FADE_RANGE,
+    RADAR_LOW_DETAIL,
+    RADAR_OPACITY,
+    RADAR_POINTER,
+    RADAR_RANGE,
+    RELATIVE_SAFE_MODE,
+    SHOW_DELTA_ON_INVALID_LAPS,
+    SPEED_UNITS,
+    VR_MODE
+} from "./consts";
+import IShared from './r3eTypes';
+import {AudioController} from "./utils";
+import {HudLayoutElements} from './settingsPage';
+import SharedMemorySupplier, {GracePeriodBetweenPresets} from './SharedMemorySupplier';
+import EventEmitter from './EventEmitter';
+import HubCommunication from './HubCommunication';
+import PlatformHandler from './platform/PlatformHandler';
 
+const commsHandler = new PlatformHandler();
 export default class Hud extends EventListener {
     public static readonly PROCESSING_WARNING_THRESHOLD = 9;
     public static readonly DELAY_WARNING_THRESHOLD = 200;
@@ -174,9 +194,9 @@ export default class Hud extends EventListener {
     }
     
     protected override onEnteredReplay(data: IShared): void {
-        ipcRenderer.send('load-replay-preset');
+        commsHandler.sendCommand('load-replay-preset');
     }
     protected override onLeftReplay(data: IShared): void {
-        ipcRenderer.send('unload-replay-preset');
+        commsHandler.sendCommand('unload-replay-preset');
     }
 }

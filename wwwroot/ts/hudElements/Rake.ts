@@ -1,6 +1,6 @@
-import HudElement from "./HudElement.js";
-import {valueIsValid, NA} from "../consts.js";
-import {IPlayerData, IDriverInfo} from "../r3eTypes.js";
+import HudElement from "./HudElement";
+import {NA, valueIsValid} from "../consts";
+import {IDriverInfo, IPlayerData} from "../r3eTypes";
 
 export default class Rake extends HudElement {
     override sharedMemoryKeys: string[] = ['player','vehicleInfo'];

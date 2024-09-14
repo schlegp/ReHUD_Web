@@ -1,8 +1,16 @@
-import HudElement, {Hide} from "./HudElement.js";
-import {laptimeFormat, valueIsValidAssertNull, validNumberOrDefault, nameFormat, getClassColors, POSITION_BAR_CELL_COUNT} from "../consts.js";
-import {EFinishStatus, ESession, IDriverData, ISectors} from "../r3eTypes.js";
-import {Driver, getUid} from "../utils.js";
-import SettingsValue from "../SettingsValue.js";
+import HudElement, {Hide} from "./HudElement";
+import {
+    getClassColors,
+    laptimeFormat,
+    nameFormat,
+    POSITION_BAR_CELL_COUNT,
+    validNumberOrDefault,
+    valueIsValidAssertNull
+} from "../consts";
+import {EFinishStatus, ESession, IDriverData, ISectors} from "../r3eTypes";
+import {getUid} from "../utils";
+import SettingsValue from "../SettingsValue";
+import Driver from '../Driver';
 
 export default class PositionBar extends HudElement {
     override sharedMemoryKeys: string[] = ['driverData', 'position', 'sessionType', 'sectorTimesSessionBestLap'];

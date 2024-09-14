@@ -1,9 +1,19 @@
-import HudElement, {Hide} from "./HudElement.js";
-import {ESessionPhase} from "../r3eTypes.js";
-import {Driver, IExtendedDriverData, getUid} from "../utils.js";
-import {RELATIVE_LENGTH, halfLengthTop, halfLengthBottom, insertCell, NA, nameFormat, getClassColors, finishedBadly} from "../consts.js";
-import DriverManager from "../actions/DriverManager.js";
-import RankedData from "../actions/RankedData.js";
+import HudElement, {Hide} from "./HudElement";
+import {ESessionPhase} from "../r3eTypes";
+import {getUid, IExtendedDriverData} from "../utils";
+import {
+    finishedBadly,
+    getClassColors,
+    halfLengthBottom,
+    halfLengthTop,
+    insertCell,
+    NA,
+    nameFormat,
+    RELATIVE_LENGTH
+} from "../consts";
+import DriverManager from "../actions/DriverManager";
+import RankedData from "../actions/RankedData";
+import Driver from "../Driver";
 
 
 export default class RelativeViewer extends HudElement {

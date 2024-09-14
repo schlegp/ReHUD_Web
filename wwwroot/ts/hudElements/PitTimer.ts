@@ -1,5 +1,5 @@
-import {Hide, HudElementWithHideDelay} from './HudElement.js';
-import {NA, valueIsValidAssertNull} from '../consts.js';
+import {Hide, HudElementWithHideDelay} from './HudElement';
+import {NA, valueIsValidAssertNull} from '../consts';
 
 export default class PitTimer extends HudElementWithHideDelay {
   override sharedMemoryKeys: string[] = ['pitTotalDuration', 'pitElapsedTime'];

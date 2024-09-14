@@ -1,5 +1,5 @@
-import HudElement from "./HudElement.js";
-import {NA, allValuesAreValid} from "../consts.js";
+import HudElement from "./HudElement";
+import {allValuesAreValid, NA} from "../consts";
 
 export default class FuelToEnd extends HudElement {
     override sharedMemoryKeys: string[] = ['+lapsUntilFinish', '+fuelPerLap'];

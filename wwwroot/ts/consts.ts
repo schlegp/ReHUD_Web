@@ -1,7 +1,7 @@
 /* ========================================== Types ========================================== */
 
-import {GracePeriodBetweenPresets} from './SharedMemorySupplier.js';
-import IShared, { EFinishStatus, ESessionPhase, IDriverData, ISectors } from './r3eTypes.js';
+import {GracePeriodBetweenPresets} from './SharedMemorySupplier';
+import IShared, {EFinishStatus, ESessionPhase, IDriverData, ISectors} from './r3eTypes';
 
 export interface IExtendedShared {
   rawData: IShared;

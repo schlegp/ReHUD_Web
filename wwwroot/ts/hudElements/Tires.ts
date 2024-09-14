@@ -1,7 +1,7 @@
-import HudElement from "./HudElement.js";
-import SettingsValue from "../SettingsValue.js";
-import {validOrDefault, convertPressure, PRESSURE_UNITS, NA, valueIsValidAssertNull, lerpRGB3} from "../consts.js";
-import {IBrakeTemp, ITireData, ITireTemp} from "../r3eTypes.js";
+import HudElement from "./HudElement";
+import SettingsValue from "../SettingsValue";
+import {convertPressure, lerpRGB3, NA, PRESSURE_UNITS, validOrDefault, valueIsValidAssertNull} from "../consts";
+import {IBrakeTemp, ITireData, ITireTemp} from "../r3eTypes";
 
 export default class Tires extends HudElement {
     override sharedMemoryKeys: string[] = ['tireTemp', 'tireWear', 'brakeTemp', 'tireDirt', 'tirePressure'];

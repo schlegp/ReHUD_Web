@@ -1,5 +1,5 @@
-import EventListener from "../EventListener.js";
-import {IDriverData} from "../r3eTypes.js";
+import EventListener from "../EventListener";
+import {IDriverData} from "../r3eTypes";
 
 export type RankedDataEntry = {
     UserId: number,

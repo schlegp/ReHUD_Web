@@ -1,6 +1,6 @@
-import HudElement from "./HudElement.js";
-import {valueIsValidAssertNull, NA} from "../consts.js";
-import {EEngineType, IDriverInfo} from '../r3eTypes.js';
+import HudElement from "./HudElement";
+import {NA, valueIsValidAssertNull} from "../consts";
+import {EEngineType, IDriverInfo} from '../r3eTypes';
 
 export default class FuelLeft extends HudElement {
   override sharedMemoryKeys: string[] = ['vehicleInfo', 'fuelLeft', 'batterySoC'];

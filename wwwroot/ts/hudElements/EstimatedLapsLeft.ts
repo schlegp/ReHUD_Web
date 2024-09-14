@@ -1,6 +1,6 @@
-import HudElement, {Hide} from "./HudElement.js";
-import {valueIsValidAssertNull, NA, finished} from "../consts.js";
-import IShared, {EFinishStatus, ESession, IDriverData} from "../r3eTypes.js";
+import HudElement, {Hide} from "./HudElement";
+import {finished, NA, valueIsValidAssertNull} from "../consts";
+import IShared, {EFinishStatus, ESession, IDriverData} from "../r3eTypes";
 
 export default class EstimatedLapsLeft extends HudElement {
     override sharedMemoryKeys: string[] = ['sessionType', 'finishStatus', 'completedLaps', 'lapDistanceFraction', 'sessionLengthFormat', '+estimatedRaceLapCount'];

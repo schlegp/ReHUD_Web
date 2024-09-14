@@ -1,6 +1,6 @@
-import HudElement, {Hide} from "./HudElement.js";
-import {SESSION_TYPES, getSessionType, valueIsValidAssertNull} from "../consts.js";
-import {ESessionPhase} from "../r3eTypes.js";
+import HudElement, {Hide} from "./HudElement";
+import {getSessionType, SESSION_TYPES, valueIsValidAssertNull} from "../consts";
+import {ESessionPhase} from "../r3eTypes";
 
 export default class TimeLeft extends HudElement {
     override sharedMemoryKeys: string[] = ['sessionTimeRemaining', 'numberOfLaps', 'sessionType', 'completedLaps', 'sessionPhase'];

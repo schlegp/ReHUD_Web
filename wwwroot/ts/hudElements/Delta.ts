@@ -1,8 +1,9 @@
-import HudElement, {Hide, Style} from "./HudElement.js";
-import {DELTA_MODE, SHOW_DELTA_ON_INVALID_LAPS, valueIsValidAssertNull} from "../consts.js";
-import IShared, {IDriverData} from "../r3eTypes.js";
-import {DeltaManager, Driver} from "../utils.js";
-import SettingsValue from "../SettingsValue.js";
+import HudElement, {Hide, Style} from "./HudElement";
+import {DELTA_MODE, SHOW_DELTA_ON_INVALID_LAPS, valueIsValidAssertNull} from "../consts";
+import IShared, {IDriverData} from "../r3eTypes";
+import {DeltaManager} from "../utils";
+import Driver from "../Driver";
+import SettingsValue from "../SettingsValue";
 
 export default class Delta extends HudElement {
     override sharedMemoryKeys: string[] = ['timeDeltaBestSelf', 'lapTimeCurrentSelf', 'currentLapValid', 'lapDistance'];

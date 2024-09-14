@@ -1,7 +1,7 @@
-import path from 'path';
-import webpackNodeExternals from 'webpack-node-externals';
+const path = require('path');
+const webpackNodeExternals = require('webpack-node-externals');
 
-export default {
+module.exports = {
   entry: {
     index: './wwwroot/js/index.js',
     settings: './wwwroot/js/settingsPage.js',
@@ -15,4 +15,24 @@ export default {
   externals: [{ electron: 'commonjs electron' }, webpackNodeExternals({
     allowlist: [/^(?!(ws)$).*$/], // all modules except 'ws' should be bundled
   })],
+    module: {
+        rules: [
+            {
+                test: /\.(ts|tsx)$/i,
+                loader: 'ts-loader',
+                exclude: ['/node_modules/'],
+            },
+            {
+                test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+                type: 'asset',
+            },
+
+            // Add your rules for custom modules here
+            // Learn more about loaders from https://webpack.js.org/loaders/
+        ],
+    },
+    resolve: {
+        extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
+        fullySpecified: false,
+    },
 };

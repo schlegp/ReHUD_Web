@@ -265,3 +265,4 @@ wwwroot/js/
 wwwroot/dist/
  
 *.cpuprofile
+/dist/*

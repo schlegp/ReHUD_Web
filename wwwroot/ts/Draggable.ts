@@ -1,4 +1,4 @@
-import {TransformableId, getRealOffset} from "./consts.js";
+import {getRealOffset, TransformableId} from "./consts";
 
 export interface TransformableHTMLElement extends HTMLElement {
   id: TransformableId;

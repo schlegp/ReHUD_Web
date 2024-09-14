@@ -1,5 +1,5 @@
-import EventListener from "./EventListener.js";
-import {IExtendedShared} from "./consts.js";
+import EventListener from "./EventListener";
+import {IExtendedShared} from "./consts";
 
 export default abstract class Action extends EventListener {
     protected lastExecution: number = -1;

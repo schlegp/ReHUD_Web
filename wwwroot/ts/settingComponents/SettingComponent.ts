@@ -1,5 +1,6 @@
-import { ipcRenderer } from "electron";
+import PlatformHandler from '../platform/PlatformHandler'
 
+const commsHandler = new PlatformHandler();
 export default abstract class SettingComponent extends HTMLElement {
     public static readonly elementName: string;
 
@@ -150,7 +151,7 @@ export default abstract class SettingComponent extends HTMLElement {
                 this.restartButton.classList.add('restart-button');
                 this.restartButton.classList.add('hidden');
                 this.restartButton.addEventListener('click', () => {
-                    ipcRenderer.send('restart-app');
+                    commsHandler.sendCommand('restart-app');
                 });
                 this.appendChild(this.restartButton);
             }
@@ -163,7 +164,7 @@ export default abstract class SettingComponent extends HTMLElement {
     protected abstract connected(): void;
 
     public saveValue() {
-        ipcRenderer.send('set-setting', [this.key, this.value]);
+        commsHandler.sendCommand('set-setting', [this.key, this.value]);
     }
 
     protected abstract valueChange(value: any): void;
