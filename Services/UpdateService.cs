@@ -17,13 +17,19 @@ namespace ReHUD.Services
 
         public string? AppVersion { get => appVersion; }
 
-        public async Task<string> GetAppVersion() => appVersion ??= await Electron.App.GetVersionAsync();
+        public async Task<string> GetAppVersion()
+        {
+            appVersion ??= await Electron.App.GetVersionAsync();
+            return appVersion;
+        }
 
-        public async Task CheckForUpdates() {
+        public async Task CheckForUpdates()
+        {
             string currentVersion = await GetAppVersion();
             logger.InfoFormat("Checking for updates (current version: v{0})", currentVersion);
             string? remoteUrl = await GetRedirectedUrl(githubUrl + "/" + githubReleasesUrl);
-            if (remoteUrl == null) {
+            if (remoteUrl == null)
+            {
                 logger.Error("Could not get remote URL for checking updates");
                 return;
             }
@@ -33,11 +39,14 @@ namespace ReHUD.Services
             Version current = ReHUDVersion.TrimVersion(currentVersion);
             Version remote = ReHUDVersion.TrimVersion(remoteVersionText);
 
-            if (current.CompareTo(remote) < 0) {
+            if (current.CompareTo(remote) < 0)
+            {
                 logger.InfoFormat("Update available: {0}", remoteVersionText);
 
-                await Startup.ShowMessageBox("A new version is available: " + remoteVersionText, new string[] { "Show me", "Cancel" }, "Update available", MessageBoxType.info).ContinueWith((t) => {
-                    if (t.Result.Response == 0) {
+                await Startup.ShowMessageBox("A new version is available: " + remoteVersionText, new string[] { "Show me", "Cancel" }, "Update available", MessageBoxType.info).ContinueWith((t) =>
+                {
+                    if (t.Result.Response == 0)
+                    {
                         Electron.Shell.OpenExternalAsync(remoteUrl);
                     }
                 });
@@ -47,20 +56,25 @@ namespace ReHUD.Services
             logger.Info("No updates available");
         }
 
-        private static async Task<string?> GetRedirectedUrl(string url) {
+        private static async Task<string?> GetRedirectedUrl(string url)
+        {
             //this allows you to set the settings so that we can get the redirect url
-            var handler = new HttpClientHandler() {
+            var handler = new HttpClientHandler()
+            {
                 AllowAutoRedirect = false
             };
             string? redirectedUrl = null;
 
             using (HttpClient client = new(handler))
             using (HttpResponseMessage response = await client.GetAsync(url))
-            using (HttpContent content = response.Content) {
+            using (HttpContent content = response.Content)
+            {
                 // ... Read the response to see if we have the redirected url
-                if (response.StatusCode == System.Net.HttpStatusCode.Found) {
+                if (response.StatusCode == System.Net.HttpStatusCode.Found)
+                {
                     HttpResponseHeaders headers = response.Headers;
-                    if (headers != null && headers.Location != null) {
+                    if (headers != null && headers.Location != null)
+                    {
                         redirectedUrl = headers.Location.AbsoluteUri;
                     }
                 }

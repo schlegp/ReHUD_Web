@@ -42,14 +42,78 @@ import StrengthOfField from './hudElements/StrengthOfField';
 import AlltimeBestLap from './hudElements/AlltimeBestLap';
 import PitTimer from './hudElements/PitTimer';
 import CompletedLaps from './hudElements/CompletedLaps';
-import IpcCommunication from './IpcCommunication';
 import Rake from './hudElements/Rake';
 import DRS from './hudElements/Drs';
 import P2P from './hudElements/PushToPass';
 import {GracePeriodBetweenPresets} from './SharedMemorySupplier';
 
-enableLogging('index');
 
+PlatformHandler.getInstance("index:52").then(async instance => {
+    await instance.Connect()
+    enableLogging('index');
+    instance.registerEvent('hide', hideHUD);
+    instance.registerEvent('toggle-element', (_: any, arg: any) => {
+        elementToggled(arg[0], arg[1]);
+    });
+
+    instance.registerEvent('save-hud-layout', saveLayout);
+    instance.registerEvent('show', showHUD);
+    instance.registerEvent('edit-mode', async () => {
+        enterEditMode();
+        showHUD();
+    });
+    instance.registerEvent('hud-layout', (_:any, arg: string) => {
+        exitEditMode();
+        let b = JSON.parse(arg[0]) as HudLayoutElements;
+        hud.layoutElements = b;
+        loadLayout(hud.layoutElements);
+    });
+
+    instance.registerEvent('r3eData', async (_: any, data_: string) => {
+        let data = JSON.parse(data_) as IExtendedShared;
+
+        if (data.timestamp == 0) {
+            data.timestamp = Date.now();
+        }
+        for (const driver of data.rawData.driverData) {
+            (driver.driverInfo as IExtendedDriverInfo).uid = computeUid(driver.driverInfo);
+        }
+
+        try {
+            EventEmitter.cycle(data.rawData);
+        } catch (e) {
+            console.error('Error in EventEmitter.cycle', e);
+        }
+
+        hud.render(data, data.forceUpdateAll, isShown);
+
+        const now = Date.now();
+        if (lastTime != null) {
+            deltaTimes.push(now - lastTime);
+
+            if (lastLogTime == null || now - lastLogTime > LOG_FPS_EVERY * 1000) {
+                const avg = deltaTimes.reduce((a, b) => a + b, 0) / deltaTimes.length;
+                console.log(`Average FPS in the last ${LOG_FPS_EVERY} seconds:`, (1000 / avg).toFixed(2));
+                lastLogTime = now;
+
+                deltaTimes.length = 0;
+            }
+        }
+        lastTime = now;
+    });
+
+    instance.registerEvent('set-setting', (_: any, arg: string) => {
+        const [key, value] = JSON.parse(arg);
+
+        SettingsValue.set(key, value);
+    });
+
+    instance.registerEvent('settings', (_: any, arg: string) => {
+        SettingsValue.loadSettings(JSON.parse(arg));
+    });
+
+    instance.sendCommand('load-settings');
+})
 
 const hud = new Hud([
     new CarSpeed({name: 'CarSpeed', elementId: 'speed', transformableId: 'basic', renderEvery: 0}),
@@ -131,6 +195,9 @@ function elementAdjusted(event: DraggableEvent) {
     if (!hud.layoutElements[element.id].shown) {
         element.classList.add('hidden');
     }
+    PlatformHandler.getInstance("elementAdjusted").then(instance => {
+      instance.sendCommand("set-hud-layout", JSON.stringify(hud.layoutElements));
+    })
 }
 
 function elementToggled(elementId: TransformableId, shown: boolean) {
@@ -160,13 +227,10 @@ function elementToggled(elementId: TransformableId, shown: boolean) {
 function saveLayout() {
     hud.setIsInEditMode(false);
     exitEditMode();
-    PlatformHandler.sendCommand('set-hud-layout', JSON.stringify(hud.layoutElements));
+    PlatformHandler.getInstance("saveLayout").then(instance => {
+        instance.sendCommand('set-hud-layout', JSON.stringify(hud.layoutElements));
+    })
 }
-PlatformHandler.registerEvent('save-hud-layout', saveLayout);
-
-PlatformHandler.registerEvent('toggle-element', (_: any, arg: any) => {
-    elementToggled(arg[0], arg[1]);
-});
 
 const onDomReadyListeners: Array<() => void> = [];
 function onDomReady(listener: () => void) {
@@ -241,7 +305,7 @@ function _loadLayout(layout?: HudLayoutElements) {
 }
 
 async function  requestLayout() {
-    await PlatformHandler.sendCommand('get-hud-layout');
+    await (await PlatformHandler.getInstance("requestLayout")).sendCommand('get-hud-layout');
 }
 
 function addTransformable(id: TransformableId) {
@@ -294,80 +358,17 @@ function enterEditMode() {
 
 async function exitEditMode() {
     hud.setIsInEditMode(false);
-    await PlatformHandler.sendCommand('request-layout-visibility');
+    await PlatformHandler.getInstance("exitEditMode").then(instance =>{
+        instance.sendCommand('request-layout-visibility');
+    })
 }
-
-
-PlatformHandler.registerEvent('hide', hideHUD);
-PlatformHandler.registerEvent('show', showHUD);
-
-IpcCommunication.handle('edit-mode', async () => {
-    enterEditMode();
-    showHUD();
-});
-
-
-
-PlatformHandler.registerEvent('hud-layout', (_:any, arg: string) => {
-    exitEditMode();
-    console.log("hud-layout: ", arg)
-    hud.layoutElements = JSON.parse(arg[0]) as HudLayoutElements;
-    loadLayout(hud.layoutElements);
-});
 
 
 const deltaTimes: number[] = [];
 let lastTime: number = null;
 let lastLogTime: number = null;
 const LOG_FPS_EVERY = 60; // seconds
-IpcCommunication.handle('r3eData', async (event, data_: string) => {
-    // console.log("r3eData: ", data_);
-    let data = JSON.parse(data_) as IExtendedShared;
-
-    if (data.timestamp == 0) {
-        data.timestamp = Date.now();
-    }
-    for (const driver of data.rawData.driverData) {
-        (driver.driverInfo as IExtendedDriverInfo).uid = computeUid(driver.driverInfo);
-    }
-
-    try {
-        EventEmitter.cycle(data.rawData);
-    } catch (e) {
-        console.error('Error in EventEmitter.cycle', e);
-    }
-
-    hud.render(data, data.forceUpdateAll, isShown);
-
-    const now = Date.now();
-    if (lastTime != null) {
-        deltaTimes.push(now - lastTime);
-
-        if (lastLogTime == null || now - lastLogTime > LOG_FPS_EVERY * 1000) {
-            const avg = deltaTimes.reduce((a, b) => a + b, 0) / deltaTimes.length;
-            console.log(`Average FPS in the last ${LOG_FPS_EVERY} seconds:`, (1000 / avg).toFixed(2));
-            lastLogTime = now;
-
-            deltaTimes.length = 0;
-        }
-    }
-    lastTime = now;
-});
 // hideHUD();
-
-PlatformHandler.registerEvent('set-setting', (_: any, arg: string) => {
-    console.log("set-setting: ", arg)
-    const [key, value] = JSON.parse(arg);
-
-    SettingsValue.set(key, value);
-});
-
-PlatformHandler.registerEvent('settings', (_: any, arg: string) => {
-    console.log("settings: ", arg);
-    SettingsValue.loadSettings(JSON.parse(arg));
-});
-
-PlatformHandler.sendCommand('load-settings');
 
 document.addEventListener('DOMContentLoaded', () => {
 

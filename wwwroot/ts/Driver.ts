@@ -3,6 +3,7 @@ import Hud from "./Hud";
 import {RELATIVE_SAFE_MODE, valueIsValid} from "./consts";
 import {ESession} from "./r3eTypes";
 import SettingsValue from "./SettingsValue";
+import PlatformHandler from "./platform/PlatformHandler";
 
 export default class Driver extends EventListener {
     override sharedMemoryKeys: string[] = []; // while this class does use shared memory, it's provided as single values by the driver manager, so it does not directly access the shared memory object
@@ -235,7 +236,7 @@ export default class Driver extends EventListener {
         layoutId: number,
         carClassId: number,
     ) {
-        Hud.hub.invoke('SaveBestLap', layoutId, carClassId, this.bestLapTime, this.bestLap, Driver.pointsPerMeter);
+        PlatformHandler.getInstance().then(instance => instance.invoke('SaveBestLap', layoutId, carClassId, this.bestLapTime, this.bestLap, Driver.pointsPerMeter));
     }
 
     /**

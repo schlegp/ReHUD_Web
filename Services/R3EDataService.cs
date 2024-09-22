@@ -2,6 +2,7 @@
 using ElectronNET.API.Entities;
 using log4net;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 using R3E.Data;
 using ReHUD.Extensions;
 using ReHUD.Interfaces;
@@ -23,6 +24,7 @@ namespace ReHUD.Services
         private readonly IRaceRoomObserver raceRoomObserver;
         private readonly ISharedMemoryService sharedMemoryService;
         private readonly IHubContext<ReHUDHub> hubContext;
+        private readonly ICommunicationService communicationService;
 
         private readonly AutoResetEvent resetEvent;
         private CancellationTokenSource cancellationTokenSource = new();
@@ -46,10 +48,11 @@ namespace ReHUD.Services
         private double lastFuel = -1;
         private volatile int lastLap = -1;
 
-        public R3EDataService(IRaceRoomObserver raceRoomObserver, ISharedMemoryService sharedMemoryService, IHubContext<ReHUDHub> hubContext) {
+        public R3EDataService(IRaceRoomObserver raceRoomObserver, ISharedMemoryService sharedMemoryService, IHubContext<ReHUDHub> hubContext, ICommunicationService communicationService) {
             this.raceRoomObserver = raceRoomObserver;
             this.sharedMemoryService = sharedMemoryService;
             this.hubContext = hubContext;
+            this.communicationService = communicationService;
 
             extraData = new() {
                 forceUpdateAll = false
@@ -153,20 +156,16 @@ namespace ReHUD.Services
                     }
                     return Task.CompletedTask;
                 };
-
+                var electron = HybridSupport.IsElectronActive;
                 Func<Task> updateHUDTask = async () => {
                     if (enteredEditMode) {
                         extraData.forceUpdateAll = true;
-                        await IpcCommunication.Invoke(window, "r3eData", extraData.Serialize(usedKeys));
-                        await hubContext.Clients.All.SendAsync("r3eData", extraData.Serialize(usedKeys),
-                            cancellationToken);
+                        await communicationService.Invoke(window, "r3eData", extraData.Serialize(usedKeys));
                         extraData.forceUpdateAll = false;
                         enteredEditMode = false;
                     }
-                    else { 
-                        await IpcCommunication.Invoke(window, "r3eData", extraData.Serialize(usedKeys));
-                        await hubContext.Clients.All.SendAsync("r3eData", extraData.Serialize(usedKeys),
-                            cancellationToken);
+                    else {
+                        await communicationService.Invoke(window, "r3eData", extraData.Serialize(usedKeys));
                     }
                 };
 
@@ -176,7 +175,7 @@ namespace ReHUD.Services
                         if (window != null && (hudShown ?? true)) {
                             if (HybridSupport.IsElectronActive)
                             {
-                                Electron.IpcMain.Send(window, "hide");
+                                await communicationService.Send(window, "hide");
                             }
                             hudShown = false;
                         }
@@ -191,20 +190,14 @@ namespace ReHUD.Services
                     else if (window != null && !(hudShown ?? false)) {
                         if (HybridSupport.IsElectronActive)
                         {
-                            Electron.IpcMain.Send(window, "show");
+                            await communicationService.Send(window, "show");
                         }
                         window.SetAlwaysOnTop(!Startup.IsInVrMode, OnTopLevel.screenSaver);
                         hudShown = true;
                     }
                 };
-                //var sdTask = saveDataTask();
-                var uhTask = updateHUDTask();
-                //var uhsTask = updateHUDStateTask();
-                await Task.WhenAll(
-                    //sdTask, 
-                    //uhsTask, 
-                    uhTask
-                    );
+                                
+                await Task.WhenAll(saveDataTask(), updateHUDTask(), updateHUDStateTask());
 
                 lastLap = data.completedLaps;
             }
@@ -268,7 +261,7 @@ namespace ReHUD.Services
                 timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
             };
             logger.Info("Sending empty data for edit mode");
-            await IpcCommunication.Invoke(window, "r3eData", emptyData.Serialize(usedKeys));
+            await communicationService.Invoke(window, "r3eData", emptyData.Serialize(usedKeys));
         }
     }
 }

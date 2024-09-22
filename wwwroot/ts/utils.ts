@@ -409,7 +409,7 @@ export class Logger {
                 callback(message);
             }
         }
-        Hud.hub.invoke('Log', level, startTimestamp, endTimestamp, message);
+        PlatformHandler.getInstance().then(instance => instance.invoke('Log', level, startTimestamp, endTimestamp, message));
     }
 
     logFunction(callback: (...args: any[]) => void, level: LogLevel) {
@@ -544,16 +544,16 @@ export class Logger {
 
 export function enableLogging(filename: string) {
     const logger = new Logger(filename);
-    PlatformHandler.registerEvent('quit', () => {
+    PlatformHandler.getInstance().then(instance => instance.registerEvent('quit', () => {
         Logger.clear(true);
-    });
+    }))
 
     const originalLog = console.log;
     const originalWarn = console.warn;
     const originalError = console.error;
-    // console.log = logger.logFunction(originalLog, LogLevel.INFO);
-    // console.warn = logger.logFunction(originalWarn, LogLevel.WARN);
-    // console.error = logger.logFunction(originalError, LogLevel.ERROR);
+    console.log = logger.logFunction(originalLog, LogLevel.INFO);
+    console.warn = logger.logFunction(originalWarn, LogLevel.WARN);
+    console.error = logger.logFunction(originalError, LogLevel.ERROR);
 
 
     window.onerror = async (_message, _file, _line, _column, errorObj) => {
@@ -570,4 +570,13 @@ export function enableLogging(filename: string) {
         const message = `Blocked '${e.blockedURI}' from ${e.documentURI}:${e.lineNumber} (${e.violatedDirective})`;
         console.error(message);
     });
+}
+
+export function deepClone(obj: any){
+    if (typeof structuredClone === 'function') {
+        return structuredClone(obj);
+    } else {
+        // Fallback to JSON-based cloning (simpler but has limitations)
+        return JSON.parse(JSON.stringify(obj));
+    }
 }

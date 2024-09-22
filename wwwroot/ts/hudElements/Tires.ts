@@ -7,6 +7,7 @@ export default class Tires extends HudElement {
     override sharedMemoryKeys: string[] = ['tireTemp', 'tireWear', 'brakeTemp', 'tireDirt', 'tirePressure'];
 
     protected override render(tireTemp: ITireData<ITireTemp>, tireWear: ITireData<number>, brakeTemp: ITireData<IBrakeTemp>, tireDirt: ITireData<number>, tirePressure: ITireData<number>): null {
+
         const nameMap = {
             'frontLeft': 'front-left',
             'frontRight': 'front-right',

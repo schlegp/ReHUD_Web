@@ -1,6 +1,6 @@
 import NamedEntity from './NamedEntity';
 import IShared, {ESession, ESessionPhase, IDriverData} from "./r3eTypes";
-import {getUid} from "./utils";
+import {getUid, deepClone} from "./utils";
 
 export type EventCallbacks = {
     [EventEmitter.NEW_LAP_EVENT]?: (data: any) => void;
@@ -128,7 +128,7 @@ export default class EventEmitter extends NamedEntity {
         }
 
         if (this.previousData != null) {
-            const mainDriverInfo = structuredClone(data.vehicleInfo);
+            const mainDriverInfo = deepClone(data.vehicleInfo);
             mainDriverInfo.name = data.playerName;
             const mainDriverUid = getUid(mainDriverInfo);
 

@@ -53,6 +53,8 @@ public class HudLayout : JsonUserData
 
     [JsonProperty]
     private readonly Dictionary<string, HudElement> elements = new();
+
+    public Dictionary<string, HudElement> Elements { get { return elements; } }
     public static readonly string subPath = "LayoutPresets";
     public static string FullPath => Path.Combine(dataPath, subPath);
     public override string SubPath => subPath;
@@ -161,19 +163,6 @@ public class HudLayout : JsonUserData
     {
         var element = new HudElement(left, top, scale, shown);
         elements.Add(id, element);
-        return element;
-    }
-
-    public HudElement? GetElement(string id)
-    {
-        return elements.ContainsKey(id) ? elements[id] : null;
-    }
-
-    public HudElement? RemoveElement(string id)
-    {
-        if (!elements.ContainsKey(id)) return null;
-        var element = elements[id];
-        elements.Remove(id);
         return element;
     }
 

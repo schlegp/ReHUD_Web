@@ -9,6 +9,18 @@ public class Settings : JsonUserData
 
     protected SettingsData settings = new();
 
+    public bool isWebHud
+    {
+        get
+        {
+            if (Data.Settings.TryGetValue("webhud", out var val))
+            {
+                return val as bool? ?? false;
+            }
+            return false;
+        }
+    }
+
     public SettingsData Data => settings;
 
     protected override void Load(string? data) {
@@ -41,7 +53,7 @@ public class SettingsData
         .Add("hardwareAcceleration", true)
         .Add("vrMode", false);
 
-    public IEnumerable<KeyValuePair<string, object>> Settings => settings;
+    public Dictionary<string, object> Settings => settings;
 
     public SettingsData() {
         settings = new();

@@ -1,8 +1,10 @@
 using ElectronNET.API;
 using ReHUD.Factories;
 using ReHUD.Interfaces;
+using ReHUD.Models;
 using ReHUD.Services;
 using ReHUD.Utils;
+using SignalRChat.Hubs;
 using System.Diagnostics;
 
 namespace ReHUD;
@@ -21,15 +23,15 @@ public static class Program
             Console.WriteLine(ex.StackTrace);
         }
     }
-
     public static IHostBuilder CreateWebHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration(config =>
+            {
+                config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            })
             .ConfigureWebHostDefaults(webBuilder => {
                 Console.WriteLine("Configuring Web Host Defaults");
-                if (HybridSupport.IsElectronActive)
-                {
-                    webBuilder.UseElectron(args);                    
-                }
+                webBuilder.UseElectron(args);
 #if DEBUG
                 webBuilder.UseEnvironment(Environments.Development);
 #endif
@@ -51,5 +53,6 @@ public static class Program
                 services.AddSingleton<ISharedMemoryService, SharedMemoryService>();
                 services.AddSingleton<IR3EDataService, R3EDataService>();
                 services.AddSingleton<IUpdateService, UpdateService>();
+                services.AddSingleton<ICommunicationService, SignalRService>();
             });
 }

@@ -9,12 +9,13 @@ import PlatformHandler from '../platform/PlatformHandler'
 
 export default class DriverManager extends Action {
     override sharedMemoryKeys: string[] = ['driverData', 'lapTimePreviousSelf', 'completedLaps', 'sessionType', 'gameInMenus', 'gameInReplay', 'gamePaused', 'layoutId', 'sessionTimeRemaining', 'sessionPhase', 'position', 'layoutLength'];
+
     override isEnabled(): boolean {
         return true;
     }
 
-    public drivers: {[uid: string]: Driver} = {};
-    private removedDrivers: {[uid: string]: [Driver, number]} = {};
+    public drivers: { [uid: string]: Driver } = {};
+    private removedDrivers: { [uid: string]: [Driver, number] } = {};
     private _leaderCrossedSFLineAt0: number = 0;
 
     public get leaderCrossedSFLineAt0(): number {
@@ -23,12 +24,12 @@ export default class DriverManager extends Action {
 
     constructor() {
         super('DriverManager', 0, true);
-        PlatformHandler.registerEvent('load-best-lap', (_e: Error, data: string) => {
+        PlatformHandler.getInstance().then(instance => instance.registerEvent('load-best-lap', (_e: Error, data: string) => {
             console.log("load-best-lap: ", data);
             let parsed = JSON.parse(data);
 
             Driver.loadBestLap(parsed.bestLapTime, parsed.lapPoints, parsed.pointsPerMeter);
-        });
+        }))
     }
 
     public clearDriversTempData(data?: IShared): void {
@@ -135,7 +136,7 @@ export default class DriverManager extends Action {
 
             if (!(uid in this.drivers)) {
                 if (uid in this.removedDrivers) {
-                    
+
                     this.drivers[uid] = this.removedDrivers[uid][0];
                     const timeDiff = (Date.now() - this.removedDrivers[uid][1]) / 1000;
                     if (timeDiff > 3) { // 3 second temp data retention
@@ -157,15 +158,17 @@ export default class DriverManager extends Action {
                     EventEmitter.emit(EventEmitter.MAIN_DRIVER_CHANGED_EVENT, true, data, driver);
                 }
                 const shouldLoad = this.drivers[uid].setAsMainDriver();
-                
+
                 if (shouldLoad) {
-                    Hud.hub.invoke('LoadBestLap', data.layoutId, driver.driverInfo.classId).then((data) => {
-                        console.log("LoadBestLap: ", data)
-                        const dataObj = JSON.parse(data);
-                        if (dataObj.bestLapTime != null) {
-                            Driver.loadBestLap(dataObj.bestLapTime, dataObj.lapPoints, dataObj.pointsPerMeter);
-                        }
-                    });
+                    PlatformHandler.getInstance().then(instance => {
+                        instance.invoke('LoadBestLap', data.layoutId, driver.driverInfo.classId).then((data) => {
+                            console.log("LoadBestLap: ", data)
+                            const dataObj = JSON.parse(data);
+                            if (dataObj.bestLapTime != null) {
+                                Driver.loadBestLap(dataObj.bestLapTime, dataObj.lapPoints, dataObj.pointsPerMeter);
+                            }
+                        })
+                    })
                 }
             }
 

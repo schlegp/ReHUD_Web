@@ -1,6 +1,7 @@
 import Action from '../Action';
 import {addObjects, IExtendedShared, multiplyObject, valueIsValidAssertNull,} from '../consts';
 import IShared, {ESession, IDriverData, ITireData} from '../r3eTypes';
+import {deepClone} from "../utils";
 
 export default class TireManager extends Action {
   override sharedMemoryKeys: string[] = ['tireWear', 'vehicleInfo', 'layoutId', 'tireWearActive', 'gameInReplay', 'gamePaused', 'currentLapValid'];
@@ -116,7 +117,7 @@ export default class TireManager extends Action {
   }
 
   public getAverageWear(): ITireData<number> {
-    return structuredClone(this.averageWear);
+    return deepClone(this.averageWear);
   }
 
   override execute(data: IExtendedShared): void {

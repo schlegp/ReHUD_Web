@@ -29,7 +29,7 @@ export default class SharedMemorySupplier {
         if (recompile || this.usedKeys === null) {
             this.compileUsedKeys();
         }
-        PlatformHandler.sendCommand('used-keys', this.usedKeys);
+        PlatformHandler.getInstance().then(instance => instance.sendCommand('used-keys', this.usedKeys));
     }
 }
 

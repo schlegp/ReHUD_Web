@@ -29,15 +29,12 @@ import {AudioController} from "./utils";
 import {HudLayoutElements} from './settingsPage';
 import SharedMemorySupplier, {GracePeriodBetweenPresets} from './SharedMemorySupplier';
 import EventEmitter from './EventEmitter';
-import HubCommunication from './HubCommunication';
 import PlatformHandler from './platform/PlatformHandler';
 
 export default class Hud extends EventListener {
     public static readonly PROCESSING_WARNING_THRESHOLD = 9;
     public static readonly DELAY_WARNING_THRESHOLD = 200;
     public static readonly DELAY_DROP_THRESHOLD = 5000;
-
-    public static readonly hub: HubCommunication = new HubCommunication();
 
     override sharedMemoryKeys: string[] = ['+timestamp', 'player'];
     override isEnabled(): boolean {
@@ -54,7 +51,7 @@ export default class Hud extends EventListener {
         return this._layoutElements;
     }
 
-    private _isInEditMode: boolean = false;
+    private _isInEditMode: boolean = true;
     public actionServices: Action[] = [];
     public rankedDataService: RankedData = new RankedData();
     public driverManagerService: DriverManager = new DriverManager();
@@ -192,10 +189,12 @@ export default class Hud extends EventListener {
         return Hud.data.rawData.player.gameSimulationTime;
     }
     
-    protected override onEnteredReplay(data: IShared): void {
-        PlatformHandler.sendCommand('load-replay-preset');
+    protected override async onEnteredReplay(data: IShared): Promise<void> {
+        var handler = await PlatformHandler.getInstance();
+        await handler.sendCommand('load-replay-preset');
     }
-    protected override onLeftReplay(data: IShared): void {
-        PlatformHandler.sendCommand('unload-replay-preset');
+    protected override async onLeftReplay(data: IShared): Promise<void> {
+        var handler = await PlatformHandler.getInstance();
+        await handler.sendCommand('unload-replay-preset');
     }
 }
