@@ -85,7 +85,7 @@ type Settings = {
   [SPEED_UNITS]?: SpeedUnits,
   [PRESSURE_UNITS]?: PressureUnits,
   [RADAR_RANGE]?: number,
-  [RADAR_BEEP_VOLUME]?: number,
+  [RADAR_BEEP_VOLUME]?: number
 };
 
 let settings: Settings = {};
@@ -220,7 +220,9 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
 
-  const oninput: {id: string, func: (e: HTMLInputElement) => void}[] = [];
+  const oninput: {id: string, func: (e: HTMLInputElement) => void}[] = [
+    {id: 'webhudMode', func: () => { PlatformHandler.getInstance().then(instance => instance.sendCommand('webHudMode'))}}
+  ];
 
   onclick.forEach((o) => {
     document.getElementById(o.id)?.addEventListener('click', o.func);

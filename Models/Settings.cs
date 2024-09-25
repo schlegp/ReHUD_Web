@@ -13,7 +13,7 @@ public class Settings : JsonUserData
     {
         get
         {
-            if (Data.Settings.TryGetValue("webhud", out var val))
+            if (Data.Settings.TryGetValue("webhudMode", out var val))
             {
                 return val as bool? ?? false;
             }

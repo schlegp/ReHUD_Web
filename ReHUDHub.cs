@@ -213,6 +213,12 @@ namespace SignalRChat.Hubs
             ExecuteAllListeners("restart-app", input);
         }
 
+        [HubMethodName("webHudMode")]
+        public void WebHudMode(object input)
+        {
+            ExecuteAllListeners("webHudMode", input);
+        }
+
         public static Task RegisterListeners(string channel, Action<object> action)
         {
             Listeners.FirstOrDefault(x => x.Key == channel).Value.Add(action);

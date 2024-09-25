@@ -17,7 +17,7 @@ namespace ReHUD;
 
 public class Startup
 {
-    public static readonly ILog logger = LogManager.GetLogger(typeof(Startup));
+    public static readonly ILog logger = LogManager.GetLogger(typeof(Startup)); 
     private static string? logFilePath;
     private static int Port;
 
@@ -38,7 +38,7 @@ public class Startup
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IUpdateService updateService, IRaceRoomObserver raceroomObserver, ISharedMemoryService sharedMemoryService, IR3EDataService r3eDataService, ICommunicationService commService)
     {
-        IsWebHud = Configuration["webhud"]?.ToLower().Equals("true") ?? false;
+        
         Port = app.ServerFeatures.Get<IServerAddressesFeature>()!.Addresses.Select(address => new Uri(address).Port).FirstOrDefault();
 
         logFilePath = Path.Combine(UserData.dataPath, "ReHUD.log");
@@ -53,6 +53,7 @@ public class Startup
         this.r3eDataService = r3eDataService;
         this.communicationService = commService;
         settings.Load();
+        IsWebHud = settings.isWebHud;
 
 
         if (env.IsDevelopment())
@@ -77,10 +78,7 @@ public class Startup
             endpoints.MapRazorPages();
         });
 
-        if (IsWebHud)
-        {
-            Electron.App.CommandLine.AppendSwitch("enable-transparent-visuals");
-        }
+        Electron.App.CommandLine.AppendSwitch("enable-transparent-visuals");
 
 
         version.Load();
@@ -440,11 +438,9 @@ public class Startup
                 }
             }
 
-            if (!IsWebHud)
-            {
-                MainWindow?.SetIgnoreMouseEvents(locked);
-            }
-            SettingsWindow.SetAlwaysOnTop(!IsInVrMode && !locked, OnTopLevel.screenSaver);
+            MainWindow?.SetIgnoreMouseEvents(locked);
+            
+            SettingsWindow?.SetAlwaysOnTop(!IsInVrMode && !locked, OnTopLevel.screenSaver);
 
             if (locked && save) // save
             {
@@ -511,6 +507,18 @@ public class Startup
                 await layout.DeleteLayout();
                 SendHudLayout();
             }
+        });
+
+        await communicationService.On("webHudMode", async (_) =>
+        {
+            if (MainWindow is null)
+            {
+                await CreateMainWindow();
+                return;
+            }
+            
+            MainWindow.Destroy();
+            MainWindow = null;
         });
 
     }
@@ -581,7 +589,6 @@ public class Startup
             logger.Info("Exiting...");
             Electron.App.Exit(0);
         };
-        MainWindow.OnClosed += () => Electron.App.Quit();
     }
 
     private void SendHudLayout()
@@ -615,7 +622,7 @@ public class Startup
         SettingsWindow = await CreateWindowAsync(new BrowserWindowOptions()
         {
             Width = 800,
-            Height = 830,
+            Height = 870,
             Icon = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ReHUD.png"),
             WebPreferences = new WebPreferences()
             {
@@ -623,8 +630,6 @@ public class Startup
                 NodeIntegration = true,
             },
         }, loadUrl: "/Settings");
-
-        SettingsWindow.Minimize();
 
         if (!env.IsDevelopment())
             SettingsWindow.RemoveMenu();
