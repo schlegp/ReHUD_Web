@@ -2,6 +2,7 @@ import HudElement from "./HudElement";
 import SettingsValue from "../SettingsValue";
 import {convertPressure, lerpRGB3, NA, PRESSURE_UNITS, validOrDefault, valueIsValidAssertNull} from "../consts";
 import {IBrakeTemp, ITireData, ITireTemp} from "../r3eTypes";
+import {SetCustomProgress} from "../utils";
 
 export default class Tires extends HudElement {
     override sharedMemoryKeys: string[] = ['tireTemp', 'tireWear', 'brakeTemp', 'tireDirt', 'tirePressure'];
@@ -35,11 +36,13 @@ export default class Tires extends HudElement {
             
             const sides = ['left', 'center', 'right'] as const;
             for (let i = 1; i <= 3; i++) {
+
+                const customProgress: HTMLInputElement = document.querySelector(`#${name}-${i} .progress-value`);
+                    SetCustomProgress(customProgress, 1, wear, true);
                 const side = sides[i - 1];
                 const text = document.getElementById(`${name}-temp-${i}`);
-                const progress: HTMLInputElement = document.querySelector(`#${name}-${i} progress`);
-                progress.value = wear;
-
+                // const progress: HTMLInputElement = document.querySelector(`#${name}-${i} progress`);
+                // progress.value = wear;
                 const span = document.getElementById(`${name}-wear`);
                 span.innerText = `${Math.round(wear * 100)}%`;
                 if (pressure == null)
@@ -67,7 +70,11 @@ export default class Tires extends HudElement {
                     this.root.style.setProperty(`--${name}-${i}-color`, 'var(--temp-color-normal)');
                     continue;
                 }
-                this.root.style.setProperty(`--${name}-${i}-color`, lerpRGB3([0, 0, 200], [0, 200, 0], [200, 0, 0], (optimal - cold) / (hot - cold), (temp - cold) / (hot - cold)));
+                const tireColor = lerpRGB3([0, 0, 200], [0, 200, 0], [200, 0, 0], (optimal - cold) / (hot - cold), (temp - cold) / (hot - cold));
+                if(customProgress)
+                    customProgress.style.backgroundColor = tireColor;
+
+                this.root.style.setProperty(`--${name}-${i}-color`, tireColor);
 
                 if (!valueIsValidAssertNull(optimalBrake) || !valueIsValidAssertNull(coldBrake) || !valueIsValidAssertNull(hotBrake) || !valueIsValidAssertNull(currentBrake)) {
                     this.root.style.setProperty(`--${name}-brake-color`, 'var(--temp-color-normal)');

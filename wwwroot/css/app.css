@@ -178,12 +178,12 @@ progress {
   height: 6px;
 }
 
-progress::-webkit-progress-value {
+.progress-value {
   background-color: white;
   border-radius: 6px;
 }
 
-progress::-webkit-progress-bar {
+.progress-bar {
   background-color: #424242;
   border-radius: 6px;
 }
@@ -294,20 +294,20 @@ he#basic td {
 
 .wheel #front-left-wear,
 .wheel #rear-left-wear {
-  left: 12px !important;
+  left: 0.75rem !important;
 }
 .wheel #front-right-wear,
 .wheel #rear-right-wear {
-  right: 12px !important;
+  right: 0.75rem !important;
 }
 
 .wheel #front-left-wear,
 .wheel #front-right-wear {
-  top: 28px !important;
+  top: 1.7rem !important;
 }
 .wheel #rear-left-wear,
 .wheel #rear-right-wear {
-  bottom: 30px !important;
+  bottom: 1.7rem !important;
 }
 
 
@@ -359,93 +359,71 @@ he#basic td {
   height: max-content;
 }
 
-#tires progress {
+#tires .progress-bar,
+/*#tires .progress-value,*/
+#tires progress
+{
   transform: rotate(-90deg);
   width: 70px;
   height: 27px;
   margin-left: -22px;
 }
 
-#tires progress::-webkit-progress-bar {
+#tires .progress-bar {
   background-color: black;
 }
 
-#tires #front-left progress::-webkit-progress-bar {
+#tires #front-left .progress-bar {
   border: var(--dirty-front-left-size) solid var(--dirty-front-left-color);
 }
-#tires #front-right progress::-webkit-progress-bar {
+#tires #front-right .progress-bar {
   border: var(--dirty-front-right-size) solid var(--dirty-front-right-color);
 }
-#tires #rear-left progress::-webkit-progress-bar {
+#tires #rear-left .progress-bar {
   border: var(--dirty-rear-left-size) solid var(--dirty-rear-left-color);
 }
-#tires #rear-right progress::-webkit-progress-bar {
+#tires #rear-right .progress-bar {
   border: var(--dirty-rear-right-size) solid var(--dirty-rear-right-color);
 }
 
-
-
-.wheel table tr td.t1 progress::-webkit-progress-value {
+.wheel table tr td.t1 div .progress-value {
   border-radius: 5px 5px 0px 0px !important;
 }
-.wheel table tr td.t1 progress::-webkit-progress-bar {
+
+.wheel table tr td.t1 div .progress-bar {
   border-radius: 6px 6px 0px 0px !important;
   border-bottom: 1px solid black !important;
 }
-.wheel table tr td.t2 progress::-webkit-progress-value,
-.wheel table tr td.t2 progress::-webkit-progress-bar {
+
+.wheel table tr td.t2 div .progress-bar {
   border-radius: 0px 0px 0px 0px !important;
   border-bottom: 1px solid black !important;
   border-top: 1px solid black !important;
 }
-.wheel table tr td.t3 progress::-webkit-progress-value {
+
+.wheel table tr td.t3 div .progress-value {
   border-radius: 0px 0px 5px 5px !important;
 }
-.wheel table tr td.t3 progress::-webkit-progress-bar {
+
+.wheel table tr td.t3 div .progress-bar {
   border-radius: 0px 0px 6px 6px !important;
   border-top: 1px solid black !important;
 }
 
-#front-left-1 progress::-webkit-progress-value {
-  background-color: var(--front-left-1-color);
+#front-left-1 .progress-value,
+#front-left-2 .progress-value,
+#front-left-3 .progress-value,
+#front-right-1 .progress-value,
+#front-right-2 .progress-value,
+#front-right-3 .progress-value,
+#rear-left-1 .progress-value,
+#rear-left-2 .progress-value,
+#rear-left-3 .progress-value,
+#rear-right-1 .progress-value,
+#rear-right-2 .progress-value,
+#rear-right-3 .progress-value{
+  background-color: green;
 }
-#front-left-2 progress::-webkit-progress-value {
-  background-color: var(--front-left-2-color);
-}
-#front-left-3 progress::-webkit-progress-value {
-  background-color: var(--front-left-3-color);
-}
-
-#front-right-1 progress::-webkit-progress-value {
-  background-color: var(--front-right-1-color);
-}
-#front-right-2 progress::-webkit-progress-value {
-  background-color: var(--front-right-2-color);
-}
-#front-right-3 progress::-webkit-progress-value {
-  background-color: var(--front-right-3-color);
-}
-
-#rear-left-1 progress::-webkit-progress-value {
-  background-color: var(--rear-left-1-color);
-}
-#rear-left-2 progress::-webkit-progress-value {
-  background-color: var(--rear-left-2-color);
-}
-#rear-left-3 progress::-webkit-progress-value {
-  background-color: var(--rear-left-3-color);
-}
-
-#rear-right-1 progress::-webkit-progress-value {
-  background-color: var(--rear-right-1-color);
-}
-#rear-right-2 progress::-webkit-progress-value {
-  background-color: var(--rear-right-2-color);
-}
-#rear-right-3 progress::-webkit-progress-value {
-  background-color: var(--rear-right-3-color);
-}
-
 
 #fuel-data {
   height: max-content;
@@ -505,7 +483,8 @@ progress#revs {
   margin-bottom: 6px;
 }
 
-progress#revs::-webkit-progress-value {
+#revs .progress-value,
+#revs .progress-bar {
   background-color: var(--revs-color);
 }
 
@@ -525,27 +504,32 @@ progress#revs::-webkit-progress-value {
   width: var(--progress-width);
   border-spacing: 7px 4px;
   border-collapse: separate;
+  margin-left: -75px;
 }
 
-#driver-inputs progress {
-  transform: rotate(-90deg);
-  width: 119px;
-  height: var(--progress-width);
-  margin-left: -47px;
+#driver-inputs .progress-bar {
+  transform: rotate(180deg);
+  width: 20px;
+  height: 120px;
 }
 
-#driver-inputs progress::-webkit-progress-bar {
+
+#driver-inputs .progress-bar,
+#driver-inputs .progress-bar {
   background-color: rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.2)
 }
 
-#throttle-progress::-webkit-progress-value {
+#throttle-progress .progress-bar,
+#throttle-progress .progress-value {
   background-color: rgb(0, 170, 0);
 }
-#brake-progress::-webkit-progress-value {
+#brake-progress .progress-bar,
+#brake-progress .progress-value {
   background-color: rgb(255, 0, 0);
 }
-#clutch-progress::-webkit-progress-value {
+#clutch-progress .progress-bar,
+#clutch-progress .progress-value {
   background-color: rgb(0, 0, 255);
 }
 
@@ -601,16 +585,20 @@ progress#revs::-webkit-progress-value {
   filter: drop-shadow(0 0 5px black);
 }
 
-#engine-damage progress::-webkit-progress-value {
+#engine-damage .progress-bar,
+#engine-damage .progress-value {
   background-color: var(--engine-damage-color);
 }
-#transmission-damage progress::-webkit-progress-value {
+#transmission-damage .progress-bar,
+#transmission-damage .progress-value {
   background-color: var(--transmission-damage-color);
 }
-#suspension-damage progress::-webkit-progress-value {
+#suspension-damage .progress-bar,
+#suspension-damage .progress-value {
   background-color: var(--suspension-damage-color);
 }
-#aerodynamics-damage progress::-webkit-progress-value {
+#aerodynamics-damage .progress-bar,
+#aerodynamics-damage .progress-value {
   background-color: var(--aerodynamics-damage-color);
 }
 

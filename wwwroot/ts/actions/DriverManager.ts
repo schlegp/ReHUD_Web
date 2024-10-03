@@ -25,7 +25,8 @@ export default class DriverManager extends Action {
     constructor() {
         super('DriverManager', 0, true);
         PlatformHandler.getInstance().then(instance => instance.registerEvent('load-best-lap', (_e: Error, data: string) => {
-            console.log("load-best-lap: ", data);
+
+
             let parsed = JSON.parse(data);
 
             Driver.loadBestLap(parsed.bestLapTime, parsed.lapPoints, parsed.pointsPerMeter);
@@ -162,7 +163,6 @@ export default class DriverManager extends Action {
                 if (shouldLoad) {
                     PlatformHandler.getInstance().then(instance => {
                         instance.invoke('LoadBestLap', data.layoutId, driver.driverInfo.classId).then((data) => {
-                            console.log("LoadBestLap: ", data)
                             const dataObj = JSON.parse(data);
                             if (dataObj.bestLapTime != null) {
                                 Driver.loadBestLap(dataObj.bestLapTime, dataObj.lapPoints, dataObj.pointsPerMeter);

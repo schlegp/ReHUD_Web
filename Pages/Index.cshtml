@@ -95,9 +95,21 @@
                                     <td class="brake-temp" id="front-left-brake">
                                         <div></div>
                                     </td>
-                                    <td id="front-left-1" class="tire-visual t1"><progress max="1"></progress></td>
-                                    <td id="front-left-2" class="tire-visual t2"><progress max="1"></progress></td>
-                                    <td id="front-left-3" class="tire-visual t3"><progress max="1"></progress></td>
+                                    <td id="front-left-1" class="tire-visual t1">
+                                        <div class="progress-bar">
+                                            <div class="progress-value" id="progress-value"></div>
+                                        </div>
+                                    </td>
+                                    <td id="front-left-2" class="tire-visual t2">
+                                        <div class="progress-bar">
+                                            <div class="progress-value" id="progress-value"></div>
+                                        </div>
+                                    </td>
+                                    <td id="front-left-3" class="tire-visual t3">
+                                        <div class="progress-bar">
+                                            <div class="progress-value" id="progress-value"></div>
+                                        </div>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -113,9 +125,21 @@
                                     <td class="brake-placeholder"></td>
                                 </tr>
                                 <tr>
-                                    <td id="front-right-1" class="tire-visual t1"><progress max="1"></progress></td>
-                                    <td id="front-right-2" class="tire-visual t2"><progress max="1"></progress></td>
-                                    <td id="front-right-3" class="tire-visual t3"><progress max="1"></progress></td>
+                                    <td id="front-right-1" class="tire-visual t1">
+                                        <div class="progress-bar">
+                                            <div class="progress-value" id="progress-value"></div>
+                                        </div>
+                                    </td>
+                                    <td id="front-right-2" class="tire-visual t2">
+                                        <div class="progress-bar">
+                                            <div class="progress-value" id="progress-value"></div>
+                                        </div>
+                                    </td>
+                                    <td id="front-right-3" class="tire-visual t3">
+                                        <div class="progress-bar">
+                                            <div class="progress-value" id="progress-value"></div>
+                                        </div>
+                                    </td>
                                     <td class="brake-temp" id="front-right-brake">
                                         <div></div>
                                     </td>
@@ -133,9 +157,21 @@
                                     <td class="brake-temp" id="rear-left-brake">
                                         <div></div>
                                     </td>
-                                    <td id="rear-left-1" class="tire-visual t1"><progress max="1"></progress></td>
-                                    <td id="rear-left-2" class="tire-visual t2"><progress max="1"></progress></td>
-                                    <td id="rear-left-3" class="tire-visual t3"><progress max="1"></progress></td>
+                                    <td id="rear-left-1" class="tire-visual t1">
+                                        <div class="progress-bar">
+                                            <div class="progress-value" id="progress-value"></div>
+                                        </div>
+                                    </td>
+                                    <td id="rear-left-2" class="tire-visual t2">
+                                        <div class="progress-bar">
+                                            <div class="progress-value" id="progress-value"></div>
+                                        </div>
+                                    </td>
+                                    <td id="rear-left-3" class="tire-visual t3">
+                                        <div class="progress-bar">
+                                            <div class="progress-value" id="progress-value"></div>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="brake-placeholder"></td>
@@ -151,9 +187,21 @@
                             <span id="rear-right-wear"></span>
                             <table>
                                 <tr>
-                                    <td id="rear-right-1" class="tire-visual t1"><progress max="1"></progress></td>
-                                    <td id="rear-right-2" class="tire-visual t2"><progress max="1"></progress></td>
-                                    <td id="rear-right-3" class="tire-visual t3"><progress max="1"></progress></td>
+                                    <td id="rear-right-1" class="tire-visual t1">
+                                        <div class="progress-bar">
+                                            <div class="progress-value" id="progress-value"></div>
+                                        </div>
+                                    </td>
+                                    <td id="rear-right-2" class="tire-visual t2">
+                                        <div class="progress-bar">
+                                            <div class="progress-value" id="progress-value"></div>
+                                        </div>
+                                    </td>
+                                    <td id="rear-right-3" class="tire-visual t3">
+                                        <div class="progress-bar">
+                                            <div class="progress-value" id="progress-value"></div>
+                                        </div>
+                                    </td>
                                     <td class="brake-temp" id="rear-right-brake">
                                         <div></div>
                                     </td>
@@ -254,9 +302,21 @@
                         <td><span id="throttle-input"></span></td>
                     </tr>
                     <tr id="input-progress">
-                        <td><progress id="clutch-progress" max="1"></progress></td>
-                        <td><progress id="brake-progress" max="1"></progress></td>
-                        <td><progress id="throttle-progress" max="1"></progress></td>
+                        <td>
+                            <div id="clutch-progress" class="progress-bar">
+                                <div class="progress-value" id="progress-value"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div id="brake-progress" class="progress-bar">
+                                <div class="progress-value" id="progress-value"></div>
+                            </div>
+                          </td>
+                        <td>
+                            <div id="throttle-progress" class="progress-bar">
+                                <div class="progress-value" id="progress-value"></div>
+                            </div>
+                        </td>
                     </tr>
                 </table>
 
@@ -283,7 +343,9 @@
                     <img src="~/icons/abs.png" id="abs-icon" class="assist-icon" alt="abs">
                 </div>
                 <span id="speed"></span>
-                <progress id="revs" max="100" value="0"></progress>
+                <div id="revs" class="progress-bar">
+                    <div class="progress-value" id="progressBar"></div>
+                </div>
             </he>
         </div>
     </div>

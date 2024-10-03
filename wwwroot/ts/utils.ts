@@ -570,6 +570,75 @@ export function enableLogging(filename: string) {
         const message = `Blocked '${e.blockedURI}' from ${e.documentURI}:${e.lineNumber} (${e.violatedDirective})`;
         console.error(message);
     });
+
+}
+
+export function SetCustomProgress(element: HTMLElement, max: number, value: number, width: boolean) {
+        const percentage = Math.min((value / max) * 100, 100);
+        if (width)
+        {
+            element.style.width = percentage + '%';
+            element.style.height = 100 + '%';
+        }else {
+            element.style.height = percentage + '%';
+            element.style.width = 100 + '%';
+        }
+}
+
+// Function to detect the browser and its version
+export function getBrowserInfo() {
+    const ua = navigator.userAgent;
+    let browserName = "Unknown";
+    let fullVersion = "Unknown";
+    let majorVersion = 0;
+    let verOffset = null;
+    let nameOffset = null;
+
+    if ((verOffset = ua.indexOf("Opera")) != -1) {
+        browserName = "Opera";
+        fullVersion = ua.substring(verOffset + 6);
+        if ((verOffset = ua.indexOf("Version")) != -1) {
+            fullVersion = ua.substring(verOffset + 8);
+        }
+    } else if ((verOffset = ua.indexOf("MSIE")) != -1) {
+        browserName = "Microsoft Internet Explorer";
+        fullVersion = ua.substring(verOffset + 5);
+    } else if ((verOffset = ua.indexOf("Chrome")) != -1) {
+        browserName = "Chrome";
+        fullVersion = ua.substring(verOffset + 7);
+    } else if ((verOffset = ua.indexOf("Safari")) != -1) {
+        browserName = "Safari";
+        fullVersion = ua.substring(verOffset + 7);
+        if ((verOffset = ua.indexOf("Version")) != -1) {
+            fullVersion = ua.substring(verOffset + 8);
+        }
+    } else if ((verOffset = ua.indexOf("Firefox")) != -1) {
+        browserName = "Firefox";
+        fullVersion = ua.substring(verOffset + 8);
+    } else if ((nameOffset = ua.lastIndexOf(' ') + 1) < (verOffset = ua.lastIndexOf('/'))) {
+        browserName = ua.substring(nameOffset, verOffset);
+        fullVersion = ua.substring(verOffset + 1);
+        if (browserName.toLowerCase() == browserName.toUpperCase()) {
+            browserName = navigator.appName;
+        }
+    }
+    let ix = -1;
+    // Trim the fullVersion string at semicolon/space if present
+    if ((ix = fullVersion.indexOf(";")) != -1) fullVersion = fullVersion.substring(0, ix);
+    if ((ix = fullVersion.indexOf(" ")) != -1) fullVersion = fullVersion.substring(0, ix);
+
+    majorVersion = parseInt('' + fullVersion, 10);
+    if (isNaN(majorVersion)) {
+        fullVersion = '' + parseFloat(navigator.appVersion);
+        majorVersion = parseInt(navigator.appVersion, 10);
+    }
+
+    return {
+        browserName: browserName,
+        fullVersion: fullVersion,
+        majorVersion: majorVersion,
+        userAgent: ua
+    };
 }
 
 export function deepClone(obj: any){

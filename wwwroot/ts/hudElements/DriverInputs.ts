@@ -1,5 +1,6 @@
 import HudElement from "./HudElement";
 import {validNumberOrDefault, valueIsValidAssertNull} from "../consts";
+import {SetCustomProgress} from "../utils";
 
 export default class DriverInputs extends HudElement {
     override sharedMemoryKeys: string[] = ['throttleRaw', 'throttle', 'brakeRaw', 'brake', 'clutchRaw', 'clutch', 'steerInputRaw', 'steerWheelRangeDegrees'];
@@ -12,9 +13,9 @@ export default class DriverInputs extends HudElement {
         const throttle = document.getElementById('throttle-input');
         const brake = document.getElementById('brake-input');
         const clutch = document.getElementById('clutch-input');
-        const throttleProgress: HTMLInputElement = document.querySelector('#throttle-progress');
-        const brakeProgress: HTMLInputElement = document.querySelector('#brake-progress');
-        const clutchProgress: HTMLInputElement = document.querySelector('#clutch-progress');
+        const throttleProgress: HTMLInputElement = document.querySelector('#throttle-progress .progress-value');
+        const brakeProgress: HTMLInputElement = document.querySelector('#brake-progress .progress-value');
+        const clutchProgress: HTMLInputElement = document.querySelector('#clutch-progress .progress-value');
 
         const steer = document.getElementById('steering-wheel');
 
@@ -28,9 +29,9 @@ export default class DriverInputs extends HudElement {
         brake.innerText = `${Math.round(bRaw * 100)}`;
         clutch.innerText = `${Math.round(cRaw * 100)}`;
 
-        throttleProgress.value = tRaw.toString();
-        brakeProgress.value = bRaw.toString();
-        clutchProgress.value = cRaw.toString();
+        SetCustomProgress(throttleProgress, 1, tRaw, false);
+        SetCustomProgress(brakeProgress, 1, bRaw, false);
+        SetCustomProgress(clutchProgress, 1, cRaw, false);
 
         const steerAngle = sRaw * sRange / 2;
         steer.style.transform = `rotate(${steerAngle}deg)`;
