@@ -64,8 +64,7 @@ PlatformHandler.getInstance("index:52").then(async instance => {
     });
     instance.registerEvent('hud-layout', (_:any, arg: string) => {
         exitEditMode();
-        let b = JSON.parse(arg[0]) as HudLayoutElements;
-        hud.layoutElements = b;
+        hud.layoutElements = JSON.parse(arg[0]) as HudLayoutElements;
         loadLayout(hud.layoutElements);
     });
 
@@ -293,6 +292,8 @@ function _loadLayout(layout?: HudLayoutElements) {
         element.style.top = top == null ? null : top + 'px';
         element.style.scale = isNaN(scale as any) || scale as any === "" ? null : Math.pow(parseFloat(scale.toString()), ELEMENT_SCALE_POWER).toString();
         element.dataset.scale = scale.toString();
+        element.style.transform = "scale(" + scale.toString() + ")";
+
 
         element.classList.remove('hidden');
         if (!shown) {
@@ -314,7 +315,7 @@ function addTransformable(id: TransformableId) {
 
     // draggable
     const draggable = new Draggable(element, {
-        'drag:start': (event) => element.classList.add('dragged'),
+        'drag:start': (_) => element.classList.add('dragged'),
         'drag:stop': (event) => elementAdjusted(event),
     });
 
@@ -322,8 +323,6 @@ function addTransformable(id: TransformableId) {
     element.addEventListener('wheel', (e) => {
         let scale = Math.max(0.55, -e.deltaY / 2000 + (parseFloat(element.dataset.scale) || 1));
         element.dataset.scale = scale.toString();
-        scale = Math.pow(scale, ELEMENT_SCALE_POWER);
-        element.style.scale = scale.toString();
         elementAdjusted({source: element, left: null, top: null, dragged: false});
     });
 
