@@ -7,7 +7,6 @@ export default class PlatformHandler {
     private invokeQueue: Array<() => void> = [];
 
     private signalConnection: HubConnection;
-    public static isElectron = typeof window !== 'undefined' && typeof window.process !== 'undefined' && window.process.versions && window.process.versions.electron;
 
     public static async getInstance(from? : string): Promise<PlatformHandler> {
         if (!PlatformHandler.instance) {

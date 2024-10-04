@@ -508,19 +508,6 @@ public class Startup
                 SendHudLayout();
             }
         });
-
-        await communicationService.On("webHudMode", async (_) =>
-        {
-            if (MainWindow is null)
-            {
-                await CreateMainWindow();
-                return;
-            }
-            
-            MainWindow.Destroy();
-            MainWindow = null;
-        });
-
     }
 
     private object ConvertJsonElement(JsonElement jsonElement)
@@ -572,19 +559,10 @@ public class Startup
         MainWindow.SetAlwaysOnTop(!IsInVrMode, OnTopLevel.screenSaver);
         MainWindow.SetIgnoreMouseEvents(true);
 
-        Electron.App.Ready += async () =>
-        {
-            foreach (var window in Electron.WindowManager.BrowserWindows)
-            {
-                window.WebContents.OpenDevTools();
-            }
-        };
-
         Electron.App.BeforeQuit += async (QuitEventArgs args) =>
         {
             args.PreventDefault();
-            await communicationService.Send(MainWindow, "quit");
-            await communicationService.Send(SettingsWindow, "quit");
+            await communicationService.Send(null, "quit");
             await Task.Delay(300);
             logger.Info("Exiting...");
             Electron.App.Exit(0);
@@ -781,7 +759,7 @@ public class Startup
         {
             foreach (var setting in hardwareAccelerationSettings)
             {
-                Electron.App.CommandLine.RemoveSwitch(setting);
+                //Electron.App.CommandLine.RemoveSwitch(setting);
             }
         }
         else
