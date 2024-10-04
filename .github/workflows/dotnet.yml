@@ -16,7 +16,7 @@ jobs:
 
     steps:
     - name: Install wine and mono
-      run: apt update && apt install wine mono-devel -y
+      run: sudo apt update && sudo apt install wine mono-devel -y
     - uses: actions/checkout@v4
     - name: Setup Node.js
       uses: actions/setup-node@v4.0.4
