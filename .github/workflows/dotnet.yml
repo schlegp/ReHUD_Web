@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Install wine and mono
-      run: sudo apt update && sudo apt install wine mono-devel -y
+    - name: Enable 32bit and install wine/mono
+      run: sudo dpkg --add-architecture i386 && sudo apt-get update && sudo apt update && sudo apt install wine wine32 mono-devel -y
     - uses: actions/checkout@v4
     - name: Setup Node.js
       uses: actions/setup-node@v4.0.4
