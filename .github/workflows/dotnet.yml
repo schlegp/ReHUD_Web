@@ -24,8 +24,6 @@ jobs:
         dotnet-version: |
           8.0.x
           6.0.x
-    - name: Install npx
-      run: npm i -g npx
     - name: Restore dependencies
       run: dotnet restore
     - name: Install npm packages
