@@ -28,6 +28,8 @@ jobs:
       run: dotnet restore
     - name: Install npm packages
       run: npm i
+    - name: Install electronize
+      run: dotnet tool install ElectronNET.CLI -g
     - name: Build application
       run: npm run build
     - name: Upload artifact
