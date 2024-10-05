@@ -24,7 +24,7 @@ jobs:
         ref: ReHUD/main
         path: ./Electron.NET
     - name: Build Electron.NET
-      working-directory: ../Electron.NET/src
+      working-directory: ./Electron.NET/src
       run: dotnet pack ElectronNET.API && dotnet pack ElectronNET.CLI
     - name: Setup Node.js
       uses: actions/setup-node@v4.0.4
