@@ -34,7 +34,7 @@ import IncidentPoints from './hudElements/IncidentPoints';
 import SectorTimes from './hudElements/SectorTimes';
 import Delta from './hudElements/Delta';
 import SettingsValue from './SettingsValue';
-import {ELEMENT_SCALE_POWER, IExtendedShared, TransformableId, TRANSFORMABLES} from './consts';
+import {IExtendedShared, TransformableId, TRANSFORMABLES} from './consts';
 import TractionControl from './hudElements/TractionControl';
 import PositionBar from './hudElements/PositionBar';
 import CurrentLaptime from './hudElements/CurrentLaptime';
@@ -290,7 +290,6 @@ function _loadLayout(layout?: HudLayoutElements) {
 
         element.style.left = left == null ? null : left + 'px';
         element.style.top = top == null ? null : top + 'px';
-        element.style.scale = isNaN(scale as any) || scale as any === "" ? null : Math.pow(parseFloat(scale.toString()), ELEMENT_SCALE_POWER).toString();
         element.dataset.scale = scale.toString();
         element.style.transform = "scale(" + scale.toString() + ")";
 

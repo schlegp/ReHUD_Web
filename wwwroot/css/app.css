@@ -354,7 +354,7 @@ he#basic td {
 
 .wheel td span {
   font-size: 13px !important;
-  margin: 0px !important;
+  margin: 0 !important;
 }
 
 .wheel td:not(.tire-visual):not(.brake-temp) {
@@ -390,12 +390,12 @@ he#basic td {
 }
 
 .wheel table tr td.t1 div .progress-bar {
-  border-radius: 6px 6px 0px 0px !important;
+  border-radius: 6px 6px 0 0 !important;
   border-bottom: 1px solid black !important;
 }
 
 .wheel table tr td.t2 div .progress-bar {
-  border-radius: 0px 0px 0px 0px !important;
+  border-radius: 0 0 0 0 !important;
   border-bottom: 1px solid black !important;
   border-top: 1px solid black !important;
 }
@@ -405,7 +405,7 @@ he#basic td {
 }
 
 .wheel table tr td.t3 div .progress-bar {
-  border-radius: 0px 0px 6px 6px !important;
+  border-radius: 0 0 6px 6px !important;
   border-top: 1px solid black !important;
 }
 
@@ -500,10 +500,8 @@ progress#revs {
 
 #driver-inputs table {
   table-layout: fixed;
-  width: var(--progress-width);
   border-spacing: 7px 4px;
   border-collapse: separate;
-  margin-left: -75px;
 }
 
 #driver-inputs .progress-bar {
@@ -547,7 +545,7 @@ progress#revs {
 #input-progress td {
   width: var(--progress-width);
   height: 119px;
-  padding: 0px;
+  padding: 0;
 }
 
 #steering-wheel {
@@ -643,7 +641,7 @@ progress#revs {
 }
 
 #relative-viewer td.name span {
-  margin-left: 0px !important;
+  margin-left: 0 !important;
   text-align: left;
   max-width: 130px !important;
   overflow: hidden;
@@ -844,7 +842,7 @@ progress#revs {
   position: absolute !important;
   right: 10px;
   top: calc(50% + 245px);
-  translate: 0px -50%;
+  translate: 0 -50%;
 
   width: 648px;
   text-align: center;
@@ -877,7 +875,7 @@ progress#revs {
 }
 
 #position-bar .position-bar-driver {
-  flex: 1 1 0px;
+  flex: 1 1 0;
 
   height: 100%;
 
