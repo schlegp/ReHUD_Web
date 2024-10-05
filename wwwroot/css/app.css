@@ -377,15 +377,27 @@ he#basic td {
 }
 
 #tires #front-left .progress-bar {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
   border: var(--dirty-front-left-size) solid var(--dirty-front-left-color);
 }
 #tires #front-right .progress-bar {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
   border: var(--dirty-front-right-size) solid var(--dirty-front-right-color);
 }
 #tires #rear-left .progress-bar {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
   border: var(--dirty-rear-left-size) solid var(--dirty-rear-left-color);
 }
 #tires #rear-right .progress-bar {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
   border: var(--dirty-rear-right-size) solid var(--dirty-rear-right-color);
 }
 
@@ -511,6 +523,9 @@ progress#revs {
 #driver-inputs .progress-bar {
   width: 20px;
   height: 120px;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
 }
 
 
