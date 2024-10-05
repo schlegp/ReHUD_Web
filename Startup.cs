@@ -759,7 +759,7 @@ public class Startup
         {
             foreach (var setting in hardwareAccelerationSettings)
             {
-                //Electron.App.CommandLine.RemoveSwitch(setting);
+                Electron.App.CommandLine.RemoveSwitch(setting);
             }
         }
         else

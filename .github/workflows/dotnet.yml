@@ -22,9 +22,10 @@ jobs:
       with:
         repository: Yuvix25/Electron.NET
         ref: ReHUD/main
-        path: ./electronnet
-    - name: Check paths
-      run: ls ./electronnet
+        path: ../Electron.NET
+    - name: Build Electron.NET
+      working-directory: ../Electron.NET/src
+      run: dotnet pack ElectronNET.API && dotnet pack ElectronNET.CLI
     - name: Setup Node.js
       uses: actions/setup-node@v4.0.4
       with: 
