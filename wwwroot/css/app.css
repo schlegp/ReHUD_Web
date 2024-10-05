@@ -81,7 +81,6 @@
   --time-purple: rgb(202, 0, 202);
 }
 
-
 * {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -95,7 +94,11 @@
   -moz-user-drag: none;
   -ms-user-drag: none;
 }
+@font-face {
 
+  font-family: 'Oswald';
+  src: url('../fonts/Oswald.ttf') format('truetype');
+}
 body,
 html {
   background-color: transparent;

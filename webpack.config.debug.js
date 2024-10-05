@@ -5,8 +5,9 @@ const CopyPlugin = require('copy-webpack-plugin');
 module.exports = {
     plugins:[
         new CopyPlugin({
+
             patterns: [
-                { from: './wwwroot/css', to: 'C:\\Users\\phili\\WebstormProjects\\ReHUD_Web\\obj\\Host\\bin\\wwwroot\\css' },
+                { from: path.resolve('./wwwroot/css'), to: '../css' },
             ]
         })
     ],
@@ -16,7 +17,7 @@ module.exports = {
     },
     output: {
         filename: '[name]-bundle.js',
-        path: path.resolve('wwwroot', 'C:\\Users\\phili\\WebstormProjects\\ReHUD_Web\\obj\\Host\\bin\\wwwroot\\dist'),
+        path: path.resolve('wwwroot', '../obj/Host/bin/wwwroot/dist'),
     },
     target: 'node',
     mode: 'production',
