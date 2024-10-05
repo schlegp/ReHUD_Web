@@ -312,12 +312,17 @@ he#basic td {
   bottom: 1.7rem !important;
 }
 
-
 .wheel .brake-temp div {
   width: 10px;
   height: 40px;
   border: 1px solid black;
   border-radius: 5px;
+}
+
+#front-right .brake-temp,
+#rear-right .brake-temp
+{
+  padding: 0 0 0 10px;
 }
 .wheel .brake-temp,
 .wheel .brake-placeholder {
@@ -361,8 +366,7 @@ he#basic td {
   height: max-content;
 }
 
-#tires .progress-bar,
-#tires progress
+#tires .progress-bar
 {
   width: 27px;
   height: 70px;
@@ -576,24 +580,25 @@ progress#revs {
   margin-right: 15px !important;
 }
 
-#damage progress {
+#damage .progress-bar {
   height: 13px;
+  width: 100px;
   filter: drop-shadow(0 0 5px black);
 }
 
-#engine-damage .progress-bar,
+
 #engine-damage .progress-value {
   background-color: var(--engine-damage-color);
 }
-#transmission-damage .progress-bar,
+
 #transmission-damage .progress-value {
   background-color: var(--transmission-damage-color);
 }
-#suspension-damage .progress-bar,
+
 #suspension-damage .progress-value {
   background-color: var(--suspension-damage-color);
 }
-#aerodynamics-damage .progress-bar,
+
 #aerodynamics-damage .progress-value {
   background-color: var(--aerodynamics-damage-color);
 }

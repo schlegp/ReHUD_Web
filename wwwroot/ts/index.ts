@@ -322,6 +322,7 @@ function addTransformable(id: TransformableId) {
     element.addEventListener('wheel', (e) => {
         let scale = Math.max(0.55, -e.deltaY / 2000 + (parseFloat(element.dataset.scale) || 1));
         element.dataset.scale = scale.toString();
+        element.style.transform = "scale(" + scale.toString() + ")";
         elementAdjusted({source: element, left: null, top: null, dragged: false});
     });
 

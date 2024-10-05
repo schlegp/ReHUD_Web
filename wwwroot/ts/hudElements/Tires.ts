@@ -41,8 +41,6 @@ export default class Tires extends HudElement {
                     SetCustomProgress(customProgress, 1, wear, false);
                 const side = sides[i - 1];
                 const text = document.getElementById(`${name}-temp-${i}`);
-                // const progress: HTMLInputElement = document.querySelector(`#${name}-${i} progress`);
-                // progress.value = wear;
                 const span = document.getElementById(`${name}-wear`);
                 span.innerText = `${Math.round(wear * 100)}%`;
                 if (pressure == null)
