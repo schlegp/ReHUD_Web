@@ -20,7 +20,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: actions/checkout@master
       with:
-        name: Yuvix25/Electron.NET
+        repository: Yuvix25/Electron.NET
         ref: ReHUD/main
         path: ./electronnet
     - name: Check paths
