@@ -18,6 +18,13 @@ jobs:
     - name: Enable 32bit and install wine/mono
       run: sudo dpkg --add-architecture i386 && sudo apt-get update && sudo apt update && sudo apt install wine wine32 mono-devel -y
     - uses: actions/checkout@v4
+    - uses: actions/checkout@master
+      with:
+        name: Yuvix25/Electron.NET
+        ref: ReHUD/main
+        path: ./electronnet
+    - name: Check paths
+      run: ls ./electronnet
     - name: Setup Node.js
       uses: actions/setup-node@v4.0.4
       with: 
