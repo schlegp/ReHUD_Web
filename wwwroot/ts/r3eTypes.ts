@@ -28,6 +28,17 @@ export enum ESessionPhase {
     Checkered = 6
 }
 
+export enum EStartLights {
+    Unavailable = -1,
+    Off = 0,
+    OneLight = 1,
+    TwoLights = 2,
+    ThreeLights = 3,
+    FourLights = 4,
+    FiveLights = 5,
+    Green = 6
+}
+
 export enum EControl {
     Unavailable = -1,
 
@@ -653,7 +664,7 @@ export default interface IShared {
     /** Which phase start lights are in; -1 = unavailable, 0 = off,
        1-5 = redlight on and counting down, 6 = greenlight on
        note: See the r3e_session_phase enum */
-    startLights: ESessionPhase;
+    startLights: EStartLights;
 
     /** -1 = no data available */
     /**  0 = not active */

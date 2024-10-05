@@ -1,4 +1,5 @@
 using log4net;
+using Microsoft.VisualBasic;
 using PrecisionTiming;
 using R3E;
 using R3E.Data;
@@ -17,6 +18,7 @@ namespace ReHUD.Services
 
         private readonly IRaceRoomObserver raceRoomObserver;
         private TimeSpan timeInterval;
+        private TimeSpan? oldInterval;
 
         private readonly AutoResetEvent resetEvent;
         private readonly PrecisionTimer dataTimer;
@@ -76,6 +78,7 @@ namespace ReHUD.Services
         }
 
         private async Task ProcessSharedMemory(CancellationToken cancellationToken) {
+            
             logger.Info("Starting Shared memory Worker Thread");
 
             MemoryMappedFile? mmfile = null;
@@ -107,6 +110,22 @@ namespace ReHUD.Services
                     _isRunning = true;
                     _data = data;
                     OnDataReady?.Invoke(data.Value);
+
+                    // During Countdown, increase Framerate to reduce latency
+                    if (timeInterval != TimeSpan.FromMilliseconds(8) && data.Value.sessionPhase == 4 && data.Value.startLights == 5)
+                    {
+                        oldInterval = timeInterval;
+                        timeInterval = TimeSpan.FromMilliseconds(8);
+                        dataTimer.Stop();
+                        dataTimer.SetPeriod(timeInterval.Milliseconds);
+                        dataTimer.Start();
+                    }else if (data.Value.sessionPhase != 4 && oldInterval != null && timeInterval != oldInterval.Value)
+                    {
+                        timeInterval = oldInterval.Value;
+                        dataTimer.Stop();
+                        dataTimer.SetPeriod(timeInterval.Milliseconds);
+                        dataTimer.Start();
+                    }
                 }
                 else {
                     _isRunning = false;

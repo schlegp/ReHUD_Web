@@ -135,6 +135,7 @@ export const TRANSFORMABLES = {
   'rake': 'Rake',
   'drs': 'DRS',
   'p2p': 'P2P',
+  'start-lights': 'StartLights'
 } as const;
 
 export type TransformableId = keyof typeof TRANSFORMABLES;

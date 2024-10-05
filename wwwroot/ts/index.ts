@@ -45,6 +45,7 @@ import CompletedLaps from './hudElements/CompletedLaps';
 import Rake from './hudElements/Rake';
 import DRS from './hudElements/Drs';
 import P2P from './hudElements/PushToPass';
+import StartLights from "./hudElements/Startlights";
 import {GracePeriodBetweenPresets} from './SharedMemorySupplier';
 
 
@@ -162,6 +163,7 @@ const hud = new Hud([
 
     new DRS({name: 'DRS', containerId: 'drs', elementId: 'drs-left', transformableId: 'drs', renderEvery: 50}),
     new P2P({name: 'P2P', containerId: 'p2p', elementId: 'p2p-left', transformableId: 'p2p', renderEvery: 50}),
+    new StartLights({name: 'StartLights', containerId: 'start-lights', elementId: 'start-lights', transformableId: 'start-lights', renderEvery: 0}),
 ]);
 
 (window as any).hud = hud;
