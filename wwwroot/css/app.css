@@ -95,7 +95,6 @@
   -ms-user-drag: none;
 }
 @font-face {
-
   font-family: 'Oswald';
   src: url('../fonts/Oswald.ttf') format('truetype');
 }
@@ -363,13 +362,10 @@ he#basic td {
 }
 
 #tires .progress-bar,
-/*#tires .progress-value,*/
 #tires progress
 {
-  transform: rotate(-90deg);
-  width: 70px;
-  height: 27px;
-  margin-left: -22px;
+  width: 27px;
+  height: 70px;
 }
 
 #tires .progress-bar {
@@ -390,7 +386,7 @@ he#basic td {
 }
 
 .wheel table tr td.t1 div .progress-value {
-  border-radius: 5px 5px 0px 0px !important;
+  border-radius: 6px 6px 6px 6px !important;
 }
 
 .wheel table tr td.t1 div .progress-bar {
@@ -405,7 +401,7 @@ he#basic td {
 }
 
 .wheel table tr td.t3 div .progress-value {
-  border-radius: 0px 0px 5px 5px !important;
+  border-radius: 6px 6px 6px 6px !important;
 }
 
 .wheel table tr td.t3 div .progress-bar {
@@ -511,7 +507,6 @@ progress#revs {
 }
 
 #driver-inputs .progress-bar {
-  transform: rotate(180deg);
   width: 20px;
   height: 120px;
 }

@@ -38,7 +38,7 @@ export default class Tires extends HudElement {
             for (let i = 1; i <= 3; i++) {
 
                 const customProgress: HTMLInputElement = document.querySelector(`#${name}-${i} .progress-value`);
-                    SetCustomProgress(customProgress, 1, wear, true);
+                    SetCustomProgress(customProgress, 1, wear, false);
                 const side = sides[i - 1];
                 const text = document.getElementById(`${name}-temp-${i}`);
                 // const progress: HTMLInputElement = document.querySelector(`#${name}-${i} progress`);
