@@ -81,7 +81,6 @@
   --time-purple: rgb(202, 0, 202);
 }
 
-
 * {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -95,7 +94,10 @@
   -moz-user-drag: none;
   -ms-user-drag: none;
 }
-
+@font-face {
+  font-family: 'Oswald';
+  src: url('../fonts/Oswald.ttf') format('truetype');
+}
 body,
 html {
   background-color: transparent;
@@ -310,12 +312,17 @@ he#basic td {
   bottom: 1.7rem !important;
 }
 
-
 .wheel .brake-temp div {
   width: 10px;
   height: 40px;
   border: 1px solid black;
   border-radius: 5px;
+}
+
+#front-right .brake-temp,
+#rear-right .brake-temp
+{
+  padding: 0 0 0 10px;
 }
 .wheel .brake-temp,
 .wheel .brake-placeholder {
@@ -352,21 +359,17 @@ he#basic td {
 
 .wheel td span {
   font-size: 13px !important;
-  margin: 0px !important;
+  margin: 0 !important;
 }
 
 .wheel td:not(.tire-visual):not(.brake-temp) {
   height: max-content;
 }
 
-#tires .progress-bar,
-/*#tires .progress-value,*/
-#tires progress
+#tires .progress-bar
 {
-  transform: rotate(-90deg);
-  width: 70px;
-  height: 27px;
-  margin-left: -22px;
+  width: 27px;
+  height: 70px;
 }
 
 #tires .progress-bar {
@@ -374,39 +377,51 @@ he#basic td {
 }
 
 #tires #front-left .progress-bar {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
   border: var(--dirty-front-left-size) solid var(--dirty-front-left-color);
 }
 #tires #front-right .progress-bar {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
   border: var(--dirty-front-right-size) solid var(--dirty-front-right-color);
 }
 #tires #rear-left .progress-bar {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
   border: var(--dirty-rear-left-size) solid var(--dirty-rear-left-color);
 }
 #tires #rear-right .progress-bar {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
   border: var(--dirty-rear-right-size) solid var(--dirty-rear-right-color);
 }
 
 .wheel table tr td.t1 div .progress-value {
-  border-radius: 5px 5px 0px 0px !important;
+  border-radius: 6px 6px 6px 6px !important;
 }
 
 .wheel table tr td.t1 div .progress-bar {
-  border-radius: 6px 6px 0px 0px !important;
+  border-radius: 6px 6px 0 0 !important;
   border-bottom: 1px solid black !important;
 }
 
 .wheel table tr td.t2 div .progress-bar {
-  border-radius: 0px 0px 0px 0px !important;
+  border-radius: 0 0 0 0 !important;
   border-bottom: 1px solid black !important;
   border-top: 1px solid black !important;
 }
 
 .wheel table tr td.t3 div .progress-value {
-  border-radius: 0px 0px 5px 5px !important;
+  border-radius: 6px 6px 6px 6px !important;
 }
 
 .wheel table tr td.t3 div .progress-bar {
-  border-radius: 0px 0px 6px 6px !important;
+  border-radius: 0 0 6px 6px !important;
   border-top: 1px solid black !important;
 }
 
@@ -501,16 +516,16 @@ progress#revs {
 
 #driver-inputs table {
   table-layout: fixed;
-  width: var(--progress-width);
   border-spacing: 7px 4px;
   border-collapse: separate;
-  margin-left: -75px;
 }
 
 #driver-inputs .progress-bar {
-  transform: rotate(180deg);
   width: 20px;
   height: 120px;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
 }
 
 
@@ -549,7 +564,7 @@ progress#revs {
 #input-progress td {
   width: var(--progress-width);
   height: 119px;
-  padding: 0px;
+  padding: 0;
 }
 
 #steering-wheel {
@@ -580,24 +595,25 @@ progress#revs {
   margin-right: 15px !important;
 }
 
-#damage progress {
+#damage .progress-bar {
   height: 13px;
+  width: 100px;
   filter: drop-shadow(0 0 5px black);
 }
 
-#engine-damage .progress-bar,
+
 #engine-damage .progress-value {
   background-color: var(--engine-damage-color);
 }
-#transmission-damage .progress-bar,
+
 #transmission-damage .progress-value {
   background-color: var(--transmission-damage-color);
 }
-#suspension-damage .progress-bar,
+
 #suspension-damage .progress-value {
   background-color: var(--suspension-damage-color);
 }
-#aerodynamics-damage .progress-bar,
+
 #aerodynamics-damage .progress-value {
   background-color: var(--aerodynamics-damage-color);
 }
@@ -645,7 +661,7 @@ progress#revs {
 }
 
 #relative-viewer td.name span {
-  margin-left: 0px !important;
+  margin-left: 0 !important;
   text-align: left;
   max-width: 130px !important;
   overflow: hidden;
@@ -846,7 +862,7 @@ progress#revs {
   position: absolute !important;
   right: 10px;
   top: calc(50% + 245px);
-  translate: 0px -50%;
+  translate: 0 -50%;
 
   width: 648px;
   text-align: center;
@@ -879,7 +895,7 @@ progress#revs {
 }
 
 #position-bar .position-bar-driver {
-  flex: 1 1 0px;
+  flex: 1 1 0;
 
   height: 100%;
 

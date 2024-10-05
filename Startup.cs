@@ -137,7 +137,6 @@ public class Startup
                         await CreateMainWindow();
                     }
                     await CreateSettingsWindow(env);
-
                     this.raceroomObserver.Start();
                 }
                 catch (Exception e)
@@ -547,6 +546,8 @@ public class Startup
             }
         }, loadUrl: "/Index");
 
+        
+
         bool gotLock = await Electron.App.RequestSingleInstanceLockAsync((args, arg) => { });
         if (!gotLock)
         {
@@ -558,6 +559,8 @@ public class Startup
 
         MainWindow.SetAlwaysOnTop(!IsInVrMode, OnTopLevel.screenSaver);
         MainWindow.SetIgnoreMouseEvents(true);
+
+        await communicationService.Send(MainWindow, "hide");
 
         Electron.App.BeforeQuit += async (QuitEventArgs args) =>
         {

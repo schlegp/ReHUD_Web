@@ -21,6 +21,9 @@ PlatformHandler.getInstance("settings:18").then(async instance => {
   instance.registerEvent('version', (_: any, v: string) => {
     const version = document.getElementById('version');
     version.innerText = 'v' + v;
+
+    const port = document.getElementById('port');
+    port.innerText = "Port: " + window.location.port;
   });
 
   instance.registerEvent('settings', (_: any, arg: string[]) => {

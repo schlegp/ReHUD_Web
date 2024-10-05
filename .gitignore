@@ -266,3 +266,4 @@ wwwroot/dist/
  
 *.cpuprofile
 /dist/*
+/Electron.NET/
