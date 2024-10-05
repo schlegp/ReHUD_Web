@@ -8,6 +8,7 @@
     <LangVersion>default</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+	<Compile Remove="Electron.NET/**/*"></Compile>
     <Content Remove="wwwroot\ts\global.d.ts" />
     <Content Remove="wwwroot\ts\platform\PlatformHandler.ts" />
   </ItemGroup>
